@@ -1,0 +1,263 @@
+:root {
+  --board-green: #1b2e23;
+  --board-green-light: #24392c;
+  --chalk-white: #ece7da;
+  --chalk-dim: #b9c4b9;
+  --chalk-yellow: #e7c567;
+  --chalk-blue: #7fb0d8;
+  --chalk-coral: #d97a6c;
+  --rail-wood: #6b4a34;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f1a14;
+  font-family: 'Space Mono', monospace;
+  color: var(--chalk-white);
+  padding: 24px;
+}
+
+.board {
+  width: 100%;
+  max-width: 620px;
+  background: var(--board-green);
+  border: 14px solid var(--rail-wood);
+  border-radius: 6px;
+  padding: 32px clamp(20px, 5vw, 40px) 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+.board-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.chalk-title {
+  display: block;
+  font-family: 'Kalam', cursive;
+  font-size: clamp(2rem, 6vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.chalk-subtitle {
+  display: block;
+  margin-top: 6px;
+  color: var(--chalk-dim);
+  font-size: 0.85rem;
+}
+
+.card {
+  background: var(--board-green-light);
+  border: 2px dashed rgba(236, 231, 218, 0.35);
+  border-radius: 4px;
+  padding: 28px clamp(16px, 4vw, 28px);
+  min-height: 260px;
+}
+
+.board-footer {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 0.7rem;
+  color: var(--chalk-dim);
+  letter-spacing: 0.3px;
+}
+
+/* ---- Shared elements ---- */
+
+h2 {
+  font-family: 'Kalam', cursive;
+  font-size: 1.5rem;
+  margin: 0 0 12px;
+}
+
+p {
+  line-height: 1.55;
+  color: var(--chalk-white);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 18px 0;
+}
+
+label {
+  font-size: 0.8rem;
+  color: var(--chalk-dim);
+}
+
+input[type="text"] {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--chalk-dim);
+  color: var(--chalk-white);
+  font-family: 'Space Mono', monospace;
+  font-size: 1rem;
+  padding: 8px 4px;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-bottom-color: var(--chalk-yellow);
+}
+
+button {
+  font-family: 'Space Mono', monospace;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: none;
+  border: 2px solid var(--chalk-yellow);
+  color: var(--chalk-yellow);
+  padding: 10px 22px;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.btn-primary:hover {
+  background: var(--chalk-yellow);
+  color: var(--board-green);
+}
+
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---- Progress dashes ---- */
+
+.progress {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.progress span {
+  flex: 1;
+  height: 4px;
+  background: rgba(236, 231, 218, 0.25);
+  border-radius: 2px;
+}
+
+.progress span.done {
+  background: var(--chalk-yellow);
+}
+
+.category-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  color: var(--chalk-blue);
+  border: 1px solid var(--chalk-blue);
+  border-radius: 999px;
+  padding: 2px 10px;
+  margin-bottom: 10px;
+}
+
+/* ---- Options ---- */
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.option {
+  text-align: left;
+  background: transparent;
+  border: 2px solid rgba(236, 231, 218, 0.3);
+  color: var(--chalk-white);
+  padding: 12px 14px;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  display: flex;
+  gap: 10px;
+}
+
+.option:hover:not(:disabled) {
+  border-color: var(--chalk-white);
+}
+
+.option .letter {
+  color: var(--chalk-dim);
+  font-weight: 700;
+}
+
+.option.correct {
+  border-color: var(--chalk-yellow);
+  background: rgba(231, 197, 103, 0.12);
+}
+
+.option.incorrect {
+  border-color: var(--chalk-coral);
+  background: rgba(217, 122, 108, 0.12);
+}
+
+.option:disabled {
+  cursor: default;
+}
+
+/* ---- Feedback note ---- */
+
+.feedback {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-left: 3px solid var(--chalk-yellow);
+  background: rgba(236, 231, 218, 0.06);
+  font-size: 0.9rem;
+}
+
+.feedback.wrong {
+  border-left-color: var(--chalk-coral);
+}
+
+/* ---- Results ---- */
+
+.score-line {
+  font-family: 'Kalam', cursive;
+  font-size: 1.8rem;
+  margin: 4px 0 18px;
+  color: var(--chalk-yellow);
+}
+
+.leaderboard {
+  margin-top: 20px;
+  list-style: none;
+  padding: 0;
+}
+
+.leaderboard li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px dashed rgba(236, 231, 218, 0.2);
+  font-size: 0.9rem;
+}
+
+.leaderboard li:last-child {
+  border-bottom: none;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+
+.error-text {
+  color: var(--chalk-coral);
+  font-size: 0.85rem;
+}

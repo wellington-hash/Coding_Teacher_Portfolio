@@ -1,0 +1,2775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BITH491 Information Systems Audit, Security and Control - Quiz Academy</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+    <!-- Top Header Bar -->
+    <header class="bg-slate-800 border-b border-slate-700 shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <span class="text-xs uppercase tracking-wider text-indigo-400 font-semibold">BITH491 • Academic Assessment Portal</span>
+                <h1 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+                    <span>Information Systems Audit, Security & Control</span>
+                </h1>
+                <p class="text-xs text-slate-400 mt-0.5">Prepared by: <span class="text-indigo-300 font-medium">Wellington Garira</span></p>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-center shadow-inner">
+                    <span class="block text-[10px] uppercase tracking-wider text-slate-400">Chapter Time Left</span>
+                    <span id="timer" class="text-xl font-mono font-bold text-amber-400">45:00</span>
+                </div>
+                <button onclick="submitQuiz()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold px-5 py-2.5 rounded-lg shadow transition duration-150 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Submit Exam
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-8 w-full flex-grow grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        <!-- Sidebar Navigation (Chapters) -->
+        <aside class="lg:col-span-1 space-y-4">
+            <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-md sticky top-28">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 px-2">Course Modules</h2>
+                <nav id="chapterNav" class="space-y-1.5">
+                    <!-- Dynamic navigation buttons populated via JS -->
+                </nav>
+                <div class="mt-6 pt-4 border-t border-slate-700 text-xs text-slate-400 px-2 space-y-1">
+                    <p class="flex justify-between"><span>Total Chapters:</span> <strong class="text-slate-200">8 Chapters</strong></p>
+                    <p class="flex justify-between"><span>Questions per Chapter:</span> <strong class="text-slate-200">25 Questions</strong></p>
+                    <p class="flex justify-between"><span>Time per Chapter:</span> <strong class="text-slate-200">15 Minutes</strong></p>
+                    <p class="flex justify-between"><span>Total Quiz Bank:</span> <strong class="text-slate-200">200 Unique Items</strong></p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Quiz Interface Workspace -->
+        <section class="lg:col-span-3 space-y-6">
+            <!-- Chapter Title and Meta Header -->
+            <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <span id="currentChapterBadge" class="text-xs font-semibold uppercase tracking-wider bg-indigo-900/60 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-700/50">Chapter 1</span>
+                    <h2 id="currentChapterTitle" class="text-xl font-bold text-white mt-2">Introduction to Computer Security</h2>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="text-sm text-slate-400 bg-slate-900/80 px-3.5 py-1.5 rounded-lg border border-slate-700/60">
+                        Question <span id="currentQuestionNum" class="text-white font-bold">1</span> of <span id="totalChapterQuestions" class="text-white font-bold">25</span>
+                    </div>
+                    <button onclick="submitChapter()" id="submitChapterBtn" class="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold px-4 py-2 rounded-lg shadow transition duration-150 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Submit Chapter
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question Card Container -->
+            <div id="questionContainer" class="bg-slate-800 border border-slate-700 rounded-xl p-6 sm:p-8 shadow-xl relative">
+                <!-- Dynamically injected question content -->
+            </div>
+
+            <!-- Quiz Navigation Pagination Controls -->
+            <div class="flex justify-between items-center bg-slate-800/80 border border-slate-700 rounded-xl p-4 shadow-md">
+                <button onclick="prevQuestion()" id="prevBtn" class="bg-slate-700 hover:bg-slate-600 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium px-5 py-2 rounded-lg transition duration-150 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    Previous
+                </button>
+                <div class="flex gap-2" id="chapterQuickDots">
+                    <!-- Quick navigation dots within chapter -->
+                </div>
+                <button onclick="nextQuestion()" id="nextBtn" class="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium px-5 py-2 rounded-lg transition duration-150 flex items-center gap-2">
+                    Next
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Results Modal / Screen Overlay -->
+    <div id="resultsModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-6 my-8">
+            <div class="text-center space-y-2">
+                <span class="text-xs font-bold uppercase tracking-widest text-indigo-400">Exam Results Summary</span>
+                <h3 class="text-2xl font-bold text-white">BITH491 Assessment Completed</h3>
+                <p class="text-sm text-slate-400">Candidate: <span class="text-slate-200 font-semibold">Wellington Garira</span></p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                <div class="bg-slate-900 border border-slate-700/80 p-4 rounded-xl">
+                    <span class="block text-xs text-slate-400 uppercase">Final Score</span>
+                    <span id="resScore" class="text-3xl font-extrabold text-indigo-400">0%</span>
+                </div>
+                <div class="bg-slate-900 border border-slate-700/80 p-4 rounded-xl">
+                    <span class="block text-xs text-slate-400 uppercase">Correct Answers</span>
+                    <span id="resCorrect" class="text-3xl font-extrabold text-emerald-400">0 / 200</span>
+                </div>
+                <div class="bg-slate-900 border border-slate-700/80 p-4 rounded-xl">
+                    <span class="block text-xs text-slate-400 uppercase">Time Elapsed</span>
+                    <span id="resTime" class="text-3xl font-extrabold text-amber-400">00:00</span>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <h4 class="text-sm font-bold uppercase tracking-wider text-slate-300">Chapter Breakdown Performance</h4>
+                <div id="chapterBreakdown" class="space-y-2 max-h-60 overflow-y-auto pr-2">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-4 border-t border-slate-700">
+                <button onclick="closeResults()" class="bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition">
+                    Review Answers
+                </button>
+                <button onclick="restartQuiz()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition">
+                    Retake Assessment
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 border-t border-slate-700 mt-12 py-6 text-center text-xs text-slate-400">
+        <p>BITH491 Information Systems Audit, Security and Control • Academic Quiz Platform &copy; 2026</p>
+    </footer>
+
+    <!-- JavaScript Application Core -->
+    <script>
+        // Full Question Bank: 8 Chapters, 25 Direct Theoretical Questions Each (200 Total Unique Items)
+        const courseData = [
+            {
+                id: 0,
+                title: "Chapter 1: Introduction to Computer Security",
+                questions: [
+                    {
+                        q: "What do the three core principles of the CIA triad stand for in computer security?",
+                        options: [
+                            "Confidentiality, Integrity, and Availability",
+                            "Control, Inspection, and Authorization",
+                            "Cryptography, Identification, and Access",
+                            "Consistency, Isolation, and Atomicity"
+                        ],
+                        correct: 0,
+                        comment: "The CIA triad forms the foundational benchmark for information security policies, consisting of Confidentiality (protecting data from unauthorized disclosure), Integrity (ensuring data accuracy and trustworthiness), and Availability (ensuring authorized users have timely access to information)."
+                    },
+                    {
+                        q: "Which security principle ensures that sensitive data is accessible only to individuals granted explicit authorization?",
+                        options: ["Integrity", "Availability", "Confidentiality", "Non-repudiation"],
+                        correct: 2,
+                        comment: "Confidentiality restricts information access and disclosure to authorized entities only, preventing unauthorized viewing through mechanisms such as encryption and access control lists."
+                    },
+                    {
+                        q: "In the context of information security assets, what constitutes a 'vulnerability'?",
+                        options: [
+                            "An external event that could harm a system",
+                            "A weakness or flaw in information system security procedures, design, or implementation",
+                            "The measurable financial value of hardware and data",
+                            "A protective barrier implemented around a network perimeter"
+                        ],
+                        correct: 1,
+                        comment: "A vulnerability is a flaw or weakness in system security procedures, design, internal controls, or implementation that can be exploited by a threat source to gain unauthorized access or cause harm."
+                    },
+                    {
+                        q: "How is a 'threat' defined within computer security risk management?",
+                        options: [
+                            "The probability that a system component fails due to hardware age",
+                            "Any circumstance or event with the potential to adversely impact an asset through unauthorized access, destruction, disclosure, or modification",
+                            "The net financial loss incurred during a security breach",
+                            "An administrative policy restricting user installation privileges"
+                        ],
+                        correct: 1,
+                        comment: "A threat is any potential danger or circumstance that can exploit a vulnerability to breach security and cause harm to system assets."
+                    },
+                    {
+                        q: "What does data integrity guarantee regarding information systems?",
+                        options: [
+                            "Data is kept secret from unauthorized network sniffers",
+                            "Systems remain operational during power failures",
+                            "Data and systems have not been altered or destroyed in an unauthorized manner",
+                            "Users can log into systems from remote locations reliably"
+                        ],
+                        correct: 2,
+                        comment: "Integrity ensures that data is accurate, complete, and protected against unauthorized modification, tampering, or corruption throughout its lifecycle."
+                    },
+                    {
+                        q: "Which concept ensures that computing systems, networks, and data are accessible to authorized users when needed?",
+                        options: ["Availability", "Confidentiality", "Accountability", "Authentication"],
+                        correct: 0,
+                        comment: "Availability ensures that authorized users have reliable and timely access to information, software, and hardware resources when required."
+                    },
+                    {
+                        q: "What is the primary purpose of asset identification in computer security frameworks?",
+                        options: [
+                            "To catalog hardware depreciation schedules",
+                            "To determine which system components require protection and valuation",
+                            "To calculate employee performance ratings",
+                            "To establish software licensing compliance"
+                        ],
+                        correct: 1,
+                        comment: "Asset identification is the critical first step in risk management, allowing organizations to identify what hardware, software, data, and personnel need security safeguards."
+                    },
+                    {
+                        q: "Which security attack category involves capturing data packets in transit across a network without altering them?",
+                        options: [
+                            "Active attack",
+                            "Passive attack",
+                            "Denial of service attack",
+                            "Buffer overflow attack"
+                        ],
+                        correct: 1,
+                        comment: "Passive attacks involve listening to or monitoring transmissions (e.g., traffic analysis and packet sniffing) to gather information without modifying system resources or data."
+                    },
+                    {
+                        q: "What differentiates an active attack from a passive security attack?",
+                        options: [
+                            "Active attacks involve modification of data stream or creation of false data streams",
+                            "Active attacks cannot be detected by modern firewalls",
+                            "Passive attacks always cause physical hardware destruction",
+                            "Passive attacks require administrative privileges"
+                        ],
+                        correct: 0,
+                        comment: "Active attacks involve modifications to the data stream or the creation of false streams (such as masquerading, replay attacks, and modification of messages), whereas passive attacks are purely eavesdropping."
+                    },
+                    {
+                        q: "What is 'non-repudiation' in information security governance?",
+                        options: [
+                            "The ability to deny sending an email message",
+                            "Proof of data integrity during storage",
+                            "Assurance that someone cannot deny the validity of something, such as sending a transaction or message",
+                            "The elimination of software bugs in operating systems"
+                        ],
+                        correct: 2,
+                        comment: "Non-repudiation provides undeniable proof of an action or communication, ensuring that a sender cannot successfully dispute transmission or receipt of a message."
+                    },
+                    {
+                        q: "What does 'defense-in-depth' strategy mean in computer security?",
+                        options: [
+                            "Relying entirely on a single robust perimeter firewall",
+                            "Using multiple layers of security controls distributed across a system",
+                            "Storing backups exclusively in deep underground vaults",
+                            "Encrypting only database tables containing passwords"
+                        ],
+                        correct: 1,
+                        comment: "Defense-in-depth is an architectural approach that deploys multiple overlapping security controls and layers so that if one control fails, subsequent layers protect the asset."
+                    },
+                    {
+                        q: "Which term describes an accidental or intentional event that results in a breach of security policies?",
+                        options: ["Security incident", "System redundancy", "Risk mitigation", "Access token"],
+                        correct: 0,
+                        comment: "A security incident is an adverse event or threat occurrence that compromises the confidentiality, integrity, or availability of computer systems or data."
+                    },
+                    {
+                        q: "What is the primary role of a security policy in an organization?",
+                        options: [
+                            "To define acceptable user behavior, asset protection standards, and organizational security rules",
+                            "To automate software patching across workstations",
+                            "To configure router packet filtering rules",
+                            "To calculate monthly IT operational budgets"
+                        ],
+                        correct: 0,
+                        comment: "A security policy is a high-level management document that establishes rules, expectations, and responsibilities for protecting organizational assets and maintaining compliance."
+                    },
+                    {
+                        q: "What does the abbreviation 'OSSTMM' stand for in security testing frameworks?",
+                        options: [
+                            "Open Source Security Testing Methodology Manual",
+                            "Operational System Security Threat Monitoring Method",
+                            "Online Security Standard Transmission Mechanism Model",
+                            "Optimal Software System Testing and Maintenance Manual"
+                        ],
+                        correct: 0,
+                        comment: "The Open Source Security Testing Methodology Manual (OSSTMM) provides a peer-reviewed scientific methodology for security testing and vulnerability assessment."
+                    },
+                    {
+                        q: "Which security service verifies the claimed identity of a system user, process, or device?",
+                        options: ["Authorization", "Authentication", "Accounting", "Auditing"],
+                        correct: 1,
+                        comment: "Authentication is the process of validating and confirming the identity claimed by a user, device, or application before granting access."
+                    },
+                    {
+                        q: "What is the function of 'authorization' in access control models?",
+                        options: [
+                            "Checking password complexity requirements",
+                            "Determining what specific system resources and operations an authenticated entity is permitted to access",
+                            "Logging user login timestamps",
+                            "Encrypting user credentials in transit"
+                        ],
+                        correct: 1,
+                        comment: "Authorization dictates permissions and privileges, defining whether an authenticated user is permitted to read, write, execute, or modify specific resources."
+                    },
+                    {
+                        q: "What does 'accountability' ensure within information systems security?",
+                        options: [
+                            "That system actions can be traced uniquely to an individual or process",
+                            "That financial audits balance corporate ledger accounts",
+                            "That software code compiles without syntax errors",
+                            "That network bandwidth is allocated equally"
+                        ],
+                        correct: 0,
+                        comment: "Accountability ensures that actions of an entity can be tracked uniquely to that entity, usually achieved through robust logging, auditing, and non-repudiation controls."
+                    },
+                    {
+                        q: "Which security threat involves an unauthorized entity gaining access to an asset by pretending to be an authorized user?",
+                        options: ["Masquerading", "Sniffing", "Snooping", "Replay buffering"],
+                        correct: 0,
+                        comment: "Masquerading (or spoofing) is an active attack where one entity pretends to be another to gain unauthorized access to system resources or privileged data."
+                    },
+                    {
+                        q: "What is the fundamental objective of risk assessment in information security?",
+                        options: [
+                            "To eliminate all possible technical bugs in commercial software",
+                            "To identify assets, evaluate threats and vulnerabilities, and calculate potential impact to prioritize controls",
+                            "To purchase maximum insurance coverage for office hardware",
+                            "To reduce network bandwidth consumption"
+                        ],
+                        correct: 1,
+                        comment: "Risk assessment evaluates asset value, likelihood of threats exploiting vulnerabilities, and potential impact to guide informed security spending and control selection."
+                    },
+                    {
+                        q: "Which document defines standard guidelines for risk management published by the National Institute of Standards and Technology (NIST)?",
+                        options: ["NIST SP 800-30", "RFC 793", "IEEE 802.11", "ISO 9001"],
+                        correct: 0,
+                        comment: "NIST Special Publication 800-30 ('Guide for Conducting Risk Assessments') provides federal agencies and enterprises with comprehensive risk assessment methodologies."
+                    },
+                    {
+                        q: "What is residual risk?",
+                        options: [
+                            "The total amount of risk present before any security controls are applied",
+                            "The risk remaining after security controls and countermeasures have been implemented",
+                            "The financial cost of purchasing hardware insurance",
+                            "The risk associated with legacy software operating systems"
+                        ],
+                        correct: 1,
+                        comment: "Residual risk is the remaining exposure that persists after management has implemented countermeasures, safeguards, and risk mitigation strategies."
+                    },
+                    {
+                        q: "What is the primary characteristic of physical security controls?",
+                        options: [
+                            "They protect physical access to hardware, facilities, and infrastructure housing information systems",
+                            "They encrypt data stored on solid-state drives",
+                            "They filter malicious TCP packets at the network layer",
+                            "They detect syntax errors in Python source code"
+                        ],
+                        correct: 0,
+                        comment: "Physical security controls encompass tangible barriers, guards, locks, biometrics, and environmental monitoring designed to protect physical IT assets."
+                    },
+                    {
+                        q: "Which term describes the process of returning an information system to a secure baseline after a security breach?",
+                        options: ["System remediation", "Data hashing", "Tokenization", "Virtualization"],
+                        correct: 0,
+                        comment: "Remediation involves fixing vulnerabilities, patching systems, eradicating malware, and restoring configurations to a verified secure baseline after an incident."
+                    },
+                    {
+                        q: "What is the purpose of security auditing logs?",
+                        options: [
+                            "To record chronological evidence of system events, user activities, and security-relevant transactions",
+                            "To compress database backup file sizes",
+                            "To speed up processor execution threads",
+                            "To monitor office electricity consumption"
+                        ],
+                        correct: 0,
+                        comment: "Audit logs provide chronological records of system and user activities, enabling forensic investigation, compliance verification, and anomaly detection."
+                    },
+                    {
+                        q: "What does the term 'attack surface' refer to in software and network security?",
+                        options: [
+                            "The physical dimensions of a server rack",
+                            "The sum of all vulnerabilities, entry points, and exposed interfaces through which an attacker can enter a system",
+                            "The total number of firewall rules configured on a router",
+                            "The maximum network throughput capacity"
+                        ],
+                        correct: 1,
+                        comment: "An attack surface encompasses all potential entry points, exposed services, interfaces, and flaws that an adversary can target to compromise a system."
+                    }
+                ]
+            },
+            {
+                id: 1,
+                title: "Chapter 2: Computer Security Technology and Principles",
+                questions: [
+                    {
+                        q: "What are the three fundamental categories of user authentication credentials?",
+                        options: [
+                            "Something you know, something you have, and something you are",
+                            "Username, password, and IP address",
+                            "Token, certificate, and cookie",
+                            "Hardware, software, and firmware"
+                        ],
+                        correct: 0,
+                        comment: "Authentication factors are categorized into knowledge factors (what you know), possession factors (what you have), and inheritance factors (biometrics, what you are)."
+                    },
+                    {
+                        q: "Which access control model relies on security labels assigned to subjects and classification levels assigned to objects?",
+                        options: [
+                            "Discretionary Access Control (DAC)",
+                            "Mandatory Access Control (MAC)",
+                            "Role-Based Access Control (RBAC)",
+                            "Attribute-Based Access Control (ABAC)"
+                        ],
+                        correct: 1,
+                        comment: "Mandatory Access Control (MAC) enforces strict access based on centralized security policies where system labels (e.g., Top Secret, Confidential) dictate access permissions."
+                    },
+                    {
+                        q: "In Discretionary Access Control (DAC), who determines whether access to a resource is granted?",
+                        options: [
+                            "The system security administrator exclusively",
+                            "The owner or creator of the resource",
+                            "An automated AI neural network",
+                            "The centralized domain controller"
+                        ],
+                        correct: 1,
+                        comment: "In DAC models, resource owners have full discretion to grant or revoke access permissions to other users or groups for their owned files and objects."
+                    },
+                    {
+                        q: "What is the core principle of Role-Based Access Control (RBAC)?",
+                        options: [
+                            "Permissions are assigned to specific user accounts individually",
+                            "Permissions are associated with organizational roles, and users are assigned to those roles",
+                            "Access depends entirely on physical geographic location",
+                            "Users can freely modify file permission bits"
+                        ],
+                        correct: 1,
+                        comment: "RBAC simplifies security administration by assigning permissions to functional roles rather than individual users, aligning access rights with organizational job duties."
+                    },
+                    {
+                        q: "What is the primary function of a firewall in network security architecture?",
+                        options: [
+                            "To encrypt hard drive storage partitions",
+                            "To monitor and control incoming and outgoing network traffic based on predetermined security rules",
+                            "To detect malware signatures inside compiled executable files",
+                            "To generate cryptographic digital certificates"
+                        ],
+                        correct: 1,
+                        comment: "Firewalls act as network gatekeepers, filtering packet traffic across network perimeters based on configured IP addresses, ports, and protocols."
+                    },
+                    {
+                        q: "What distinguishes an Intrusion Detection System (IDS) from an Intrusion Prevention System (IPS)?",
+                        options: [
+                            "An IDS only monitors and alerts on suspicious activity, whereas an IPS can actively block or prevent detected attacks in real-time",
+                            "An IPS is strictly passive while an IDS modifies firewall rules",
+                            "An IDS operates only on physical layer cabling",
+                            "There is no functional difference between them"
+                        ],
+                        correct: 0,
+                        comment: "IDS solutions are detection-and-alert systems placed passively or inline, whereas IPS solutions are positioned inline to actively block malicious traffic streams in real-time."
+                    },
+                    {
+                        q: "What is a signature-based intrusion detection mechanism?",
+                        options: [
+                            "Detecting attacks by comparing observed network traffic patterns against a database of known threat signatures or attack patterns",
+                            "Requiring digital signature verification on all incoming email attachments",
+                            "Authenticating system administrators using cryptographic smart cards",
+                            "Analyzing baseline CPU utilization spikes"
+                        ],
+                        correct: 0,
+                        comment: "Signature-based detection matches network traffic or log patterns against known threat signatures; while highly accurate for known attacks, it fails against zero-day exploits."
+                    },
+                    {
+                        q: "What is anomaly-based intrusion detection?",
+                        options: [
+                            "Matching traffic against a known database of virus hashes",
+                            "Detecting attacks by establishing a baseline of normal system behavior and flagging significant deviations from that baseline",
+                            "Scanning hard drives for unencrypted passwords",
+                            "Checking SSL/TLS certificate expiration dates"
+                        ],
+                        correct: 1,
+                        comment: "Anomaly-based detection models normal system or network behavior and generates alerts when deviations occur, making it effective for detecting novel zero-day threats."
+                    },
+                    {
+                        q: "What is the purpose of database security controls in enterprise systems?",
+                        options: [
+                            "To ensure database files fit onto magnetic backup tapes",
+                            "To protect stored data from unauthorized access, SQL injection, corruption, and confidentiality breaches",
+                            "To optimize SQL query execution speeds",
+                            "To automate table index defragmentation"
+                        ],
+                        correct: 1,
+                        comment: "Database security encompasses authentication, fine-grained access control, encryption, auditing, and input sanitization to protect sensitive stored data."
+                    },
+                    {
+                        q: "What is cloud security shared responsibility model?",
+                        options: [
+                            "The cloud provider is 100% responsible for all security layers",
+                            "The customer is entirely responsible for physical data center security",
+                            "Security responsibilities are divided between the cloud provider (security of the cloud) and the customer (security in the cloud)",
+                            "Security costs are split equally between all tenants"
+                        ],
+                        correct: 2,
+                        comment: "The shared responsibility model delineates security duties, where cloud vendors secure underlying infrastructure, while customers manage data, IAM, and configuration."
+                    },
+                    {
+                        q: "What is malware (malicious software)?",
+                        options: [
+                            "Any software program written in compiled C++ code",
+                            "Software designed specifically to disrupt, damage, or gain unauthorized access to computer systems",
+                            "Open-source operating system diagnostic utilities",
+                            "Outdated software missing recent vendor patches"
+                        ],
+                        correct: 1,
+                        comment: "Malware is an umbrella term covering viruses, worms, trojans, ransomware, and spyware designed to compromise system confidentiality, integrity, or availability."
+                    },
+                    {
+                        q: "How does a computer virus differ from a computer worm?",
+                        options: [
+                            "Viruses require human action (such as opening an infected file) to spread, whereas worms can replicate and propagate independently across networks",
+                            "Worms only infect physical floppy disks",
+                            "Viruses cannot cause data deletion",
+                            "Worms require administrative privileges to execute"
+                        ],
+                        correct: 0,
+                        comment: "Viruses attach themselves to host programs and require user intervention to propagate, whereas worms are standalone malware that self-replicate across network connections."
+                    },
+                    {
+                        q: "What is a Trojan horse in computer security terminology?",
+                        options: [
+                            "A hardware device used to intercept Ethernet cables",
+                            "Malicious software disguised as or bundled within legitimate, desirable software",
+                            "An encrypted communication tunnel across public networks",
+                            "A secure boot verification protocol"
+                        ],
+                        correct: 1,
+                        comment: "A Trojan horse appears as useful or benign software but contains hidden malicious code that executes upon installation, bypassing security expectations."
+                    },
+                    {
+                        q: "What is ransomware?",
+                        options: [
+                            "Malware that encrypts victim files or locks system access and demands payment for decryption keys",
+                            "Software used by law enforcement to track stolen laptops",
+                            "An automated subscription billing system",
+                            "A network protocol for secure file transfers"
+                        ],
+                        correct: 0,
+                        comment: "Ransomware encrypts critical user data and demands financial extortion (ransom) in exchange for the private decryption key required to restore access."
+                    },
+                    {
+                        q: "What characterizes a Denial-of-Service (DoS) attack?",
+                        options: [
+                            "Stealing confidential corporate passwords from memory",
+                            "Overwhelming a system's resources (bandwidth, CPU, memory) so that legitimate users cannot access services",
+                            "Modifying database financial records stealthily",
+                            "Intercepting wireless network encryption keys"
+                        ],
+                        correct: 1,
+                        comment: "DoS attacks disrupt system availability by flooding targets with excessive traffic or requests, exhausting server resources and rendering services inaccessible."
+                    },
+                    {
+                        q: "What is a Distributed Denial-of-Service (DDoS) attack?",
+                        options: [
+                            "A DoS attack launched simultaneously from multiple compromised systems (botnets)",
+                            "A virus distributed across cloud storage drives",
+                            "An attack targeting distributed database replicas",
+                            "A phishing campaign sent via multiple email servers"
+                        ],
+                        correct: 0,
+                        comment: "DDoS attacks leverage coordinated networks of compromised machines (botnets) to flood a single target with overwhelming traffic volume."
+                    },
+                    {
+                        q: "What is a botnet in cyber security contexts?",
+                        options: [
+                            "A network of automated customer service chatbots",
+                            "A collection of compromised computers controlled remotely by an attacker, often used for DDoS or spam distribution",
+                            "An inventory system for server hardware",
+                            "A secure routing protocol for peer-to-peer sharing"
+                        ],
+                        correct: 1,
+                        comment: "A botnet consists of infected machines ('bots') centrally controlled via command-and-control (C2) infrastructure to execute coordinated malicious campaigns."
+                    },
+                    {
+                        q: "What is multi-factor authentication (MFA)?",
+                        options: [
+                            "Using multiple passwords for the same user account",
+                            "Requiring two or more distinct authentication factors from different categories (knowledge, possession, inheritance)",
+                            "Logging into a system from multiple computers simultaneously",
+                            "Changing passwords every thirty days automatically"
+                        ],
+                        correct: 1,
+                        comment: "MFA enhances security by requiring users to provide two or more independent verification factors, significantly reducing the risk of unauthorized access due to compromised passwords."
+                    },
+                    {
+                        q: "What is stateful inspection in modern firewall architectures?",
+                        options: [
+                            "Inspecting only source and destination IP addresses in packet headers",
+                            "Tracking the operational state and context of active network connections to make intelligent filtering decisions",
+                            "Checking the physical temperature status of router silicon chips",
+                            "Storing complete database backups in volatile RAM"
+                        ],
+                        correct: 1,
+                        comment: "Stateful inspection firewalls maintain connection state tables, tracking TCP handshakes and session context to determine whether packet flows belong to legitimate established connections."
+                    },
+                    {
+                        q: "What is an application-layer firewall (proxy firewall)?",
+                        options: [
+                            "A firewall that operates exclusively at the physical data-link layer",
+                            "A firewall that understands and filters traffic based on specific application protocols (e.g., HTTP, FTP, SIP)",
+                            "Software running inside a web browser extension",
+                            "A hardware device protecting server power supplies"
+                        ],
+                        correct: 1,
+                        comment: "Application-layer gateways (proxies) inspect traffic payloads and application-level commands, providing deep inspection and protocol validation."
+                    },
+                    {
+                        q: "What is privilege creep in user access management?",
+                        options: [
+                            "The gradual accumulation of unnecessary access permissions by users over time as they change roles",
+                            "An attack where malware escalates from standard user to root privileges",
+                            "The slow degradation of CPU performance due to memory leaks",
+                            "The increase in network latency during peak hours"
+                        ],
+                        correct: 0,
+                        comment: "Privilege creep occurs when employees accumulate access rights across multiple job transitions without revoking old permissions, expanding organizational risk exposure."
+                    },
+                    {
+                        q: "What is the principle of least privilege (PoLP)?",
+                        options: [
+                            "Giving every user administrator rights for maximum efficiency",
+                            "Restricting user access permissions to the bare minimum necessary to perform their assigned job duties",
+                            "Disabling all system logging to conserve disk space",
+                            "Using the shortest possible cryptographic keys"
+                        ],
+                        correct: 1,
+                        comment: "The principle of least privilege dictates that users and processes should operate with the absolute minimum level of permissions required to complete authorized tasks."
+                    },
+                    {
+                        q: "What is a rootkit?",
+                        options: [
+                            "A hardware tool used to reset BIOS passwords",
+                            "A stealthy type of malware designed to hide its presence and maintain privileged root-level access to a computer system",
+                            "An open-source Linux administration toolkit",
+                            "A secure bootloader utility"
+                        ],
+                        correct: 1,
+                        comment: "Rootkits modify operating system kernels and system binaries to conceal malicious processes, network connections, and files from administrators and antivirus scanners."
+                    },
+                    {
+                        q: "What is spyware?",
+                        options: [
+                            "Software that secretly gathers information about a user or organization without their knowledge and transmits it to third parties",
+                            "Hardware binoculars used to look at computer screens",
+                            "An audit tool for checking network cable lengths",
+                            "A protocol for secure web browsing"
+                        ],
+                        correct: 0,
+                        comment: "Spyware infiltrates systems to monitor user keystrokes, browsing habits, or sensitive credentials, transmitting collected intelligence to malicious operators."
+                    },
+                    {
+                        q: "What is the primary function of a Network Intrusion Detection System (NIDS)?",
+                        options: [
+                            "To monitor traffic across an entire network segment for malicious packets and security policy violations",
+                            "To scan individual laptop batteries for degradation",
+                            "To compile C source code on remote servers",
+                            "To manage Wi-Fi router channel frequencies"
+                        ],
+                        correct: 0,
+                        comment: "NIDS sensors analyze aggregate network traffic across strategic network choke points to identify unauthorized scans, attacks, and protocol anomalies."
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Chapter 3: Software Security and Trusted Systems",
+                questions: [
+                    {
+                        q: "What is a buffer overflow vulnerability?",
+                        options: [
+                            "A condition where a program attempts to store data beyond the boundary of a fixed-length memory buffer, corrupting adjacent memory",
+                            "An overflow of network packets in a router queue",
+                            "A memory leak caused by unclosed database connections",
+                            "An excessive consumption of CPU cache lines"
+                        ],
+                        correct: 0,
+                        comment: "Buffer overflow occurs when unsafe input exceeds allocated memory buffers, allowing attackers to overwrite adjacent stack or heap memory and execute arbitrary code."
+                    },
+                    {
+                        q: "What is stack smashing in software exploitation?",
+                        options: [
+                            "Crashing a computer by physically dropping the server",
+                            "A specific type of buffer overflow where the stack return address is overwritten to hijack control flow",
+                            "An algorithm for sorting database index keys",
+                            "A method of compressing log files"
+                        ],
+                        correct: 1,
+                        comment: "Stack smashing overwrites the function return pointer on the call stack, redirecting CPU execution to shellcode injected by the attacker."
+                    },
+                    {
+                        q: "What is input validation in secure software development?",
+                        options: [
+                            "Checking that user input conforms to expected format, length, type, and range before processing",
+                            "Verifying that keyboard keys are functioning correctly",
+                            "Testing database connection strings during installation",
+                            "Measuring the typing speed of system users"
+                        ],
+                        correct: 0,
+                        comment: "Input validation ensures all external data is sanitized and verified against strict criteria, preventing injection attacks, buffer overflows, and malformed data crashes."
+                    },
+                    {
+                        q: "What is SQL injection (SQLi)?",
+                        options: [
+                            "Injecting malicious physical hardware into server motherboards",
+                            "An attack where malicious SQL statements are inserted into input fields to manipulate backend database queries",
+                            "A method for speeding up database queries using RAM caching",
+                            "A protocol for secure database replication"
+                        ],
+                        correct: 1,
+                        comment: "SQL injection occurs when untrusted user input is directly concatenated into database queries without sanitization, allowing attackers to bypass authentication or extract data."
+                    },
+                    {
+                        q: "What is Cross-Site Scripting (XSS)?",
+                        options: [
+                            "A vulnerability allowing attackers to inject malicious client-side scripts (typically JavaScript) into web pages viewed by other users",
+                            "Unauthorized file copying between different web servers",
+                            "A protocol for encrypting cross-origin HTTP requests",
+                            "An error in CSS stylesheet rendering"
+                        ],
+                        correct: 0,
+                        comment: "XSS vulnerabilities allow execution of malicious scripts in victims' browsers, potentially stealing session cookies, credentials, or session tokens."
+                    },
+                    {
+                        q: "What is operating system security hardening?",
+                        options: [
+                            "Upgrading computer chassis to steel enclosures",
+                            "The process of securing an operating system by eliminating unnecessary services, patching vulnerabilities, and enforcing strong configuration baselines",
+                            "Encrypting physical hard disk platters with concrete",
+                            "Disabling all user accounts permanently"
+                        ],
+                        correct: 1,
+                        comment: "OS hardening reduces the attack surface by disabling unused ports, removing default accounts, applying security patches, and enforcing strict access controls."
+                    },
+                    {
+                        q: "What is the purpose of Address Space Layout Randomization (ASLR)?",
+                        options: [
+                            "To randomize IP addresses on local area networks",
+                            "To randomly arrange key data areas (stack, heap, libraries) in memory address space to prevent reliable exploitation of memory corruption flaws",
+                            "To allocate hard disk clusters randomly",
+                            "To schedule CPU threads across multi-core processors"
+                        ],
+                        correct: 1,
+                        comment: "ASLR makes memory-based exploitation significantly harder by randomizing where executable code and memory regions reside in process address space."
+                    },
+                    {
+                        q: "What is a trusted computing base (TCB)?",
+                        options: [
+                            "The physical foundation of a server rack",
+                            "The totality of protection mechanisms within a computer system (hardware, firmware, and software) responsible for enforcing security policy",
+                            "A database containing trusted user passwords",
+                            "An enterprise backup storage repository"
+                        ],
+                        correct: 1,
+                        comment: "The TCB comprises all hardware, firmware, and software components critical to security; if any TCB component is compromised, system security integrity fails."
+                    },
+                    {
+                        q: "What is multilevel security (MLS) in operating systems?",
+                        options: [
+                            "A system that processes information with different security classifications and permits access by users with differing clearances",
+                            "Using multiple passwords for single user login",
+                            "Running multiple operating systems inside virtual machines",
+                            "A hierarchy of network routing switches"
+                        ],
+                        correct: 0,
+                        comment: "MLS systems enforce strict security policies across information objects with varying sensitivity levels, ensuring users only access data matching their clearance."
+                    },
+                    {
+                        q: "What is the Bell-LaPadula security model primarily concerned with?",
+                        options: [
+                            "Data integrity and unauthorized modification prevention",
+                            "Confidentiality and preventing unauthorized information flow ('No read up, no write down')",
+                            "System availability and fault tolerance",
+                            "Database transaction atomicity"
+                        ],
+                        correct: 1,
+                        comment: "The Bell-LaPadula model is a state machine model enforcing confidentiality through strict rules: simple security property (no read up) and *-property (no write down)."
+                    },
+                    {
+                        q: "What is the Biba integrity model designed to protect?",
+                        options: [
+                            "Data confidentiality against eavesdropping",
+                            "Data integrity by preventing unauthorized information modification ('No read down, no write up')",
+                            "Network transmission speed",
+                            "Physical hardware against power surges"
+                        ],
+                        correct: 1,
+                        comment: "The Biba model focuses on data integrity, preventing low-integrity data from contaminating high-integrity information through its foundational rules."
+                    },
+                    {
+                        q: "What is a race condition in software execution?",
+                        options: [
+                            "A benchmark test measuring CPU clock speed",
+                            "An undesirable software flaw where system output depends on the non-deterministic timing or sequence of uncontrollable execution threads",
+                            "A network packet transmission speed competition",
+                            "A database indexing conflict"
+                        ],
+                        correct: 1,
+                        comment: "Race conditions occur when multiple threads access shared resources concurrently without proper synchronization, leading to unpredictable, exploitable behavior."
+                    },
+                    {
+                        q: "What is integer overflow in software development?",
+                        options: [
+                            "Storing an integer value that exceeds the maximum limit of the integer data type, causing wrap-around or memory corruption",
+                            "Exceeding the maximum allowed users on a server license",
+                            "An overflow of numeric log file entries",
+                            "Running out of RAM capacity"
+                        ],
+                        correct: 0,
+                        comment: "Integer overflow occurs when arithmetic operations produce values outside representable ranges, often leading to unexpected logic flaws or buffer allocation errors."
+                    },
+                    {
+                        q: "What is code review in secure software engineering?",
+                        options: [
+                            "Running automated compiler error checks",
+                            "Systematic examination of source code by peers or security experts to identify vulnerabilities, logic errors, and style violations",
+                            "Translating Python code into assembly language",
+                            "Measuring lines of code produced per developer"
+                        ],
+                        correct: 1,
+                        comment: "Code review is a vital quality and security practice where developers and security analysts inspect source code manually or via static analysis tools."
+                    },
+                    {
+                        q: "What is static application security testing (SAST)?",
+                        options: [
+                            "Testing a running application in a live production environment",
+                            "Analyzing source code or compiled binaries for security vulnerabilities without executing the program",
+                            "Checking server hardware stability in static test benches",
+                            "Measuring network latency under static load"
+                        ],
+                        correct: 1,
+                        comment: "SAST tools analyze source code statically (white-box testing approach) to uncover security vulnerabilities early in the software development lifecycle (SDLC)."
+                    },
+                    {
+                        q: "What is dynamic application security testing (DAST)?",
+                        options: [
+                            "Analyzing source code line-by-line without running it",
+                            "Black-box security testing that evaluates a running application from the outside by simulating attacks against inputs and interfaces",
+                            "Real-time monitoring of CPU temperature",
+                            "Dynamic scaling of cloud server instances"
+                        ],
+                        correct: 1,
+                        comment: "DAST evaluates running applications dynamically, testing runtime responses to malicious inputs and simulating real-world hacker exploitation."
+                    },
+                    {
+                        q: "What is the principle of defense-in-depth in software architecture?",
+                        options: [
+                            "Writing all code in a single monolithic file",
+                            "Implementing multiple layers of defensive checks (validation, sandboxing, least privilege) throughout the application",
+                            "Storing source code in deep secure underground vaults",
+                            "Using encryption keys stored in plaintext config files"
+                        ],
+                        correct: 1,
+                        comment: "Defense-in-depth in software ensures that if input validation fails, downstream components like database sanitization and sandboxing provide backup protection."
+                    },
+                    {
+                        q: "What is sandboxing in operating system and software security?",
+                        options: [
+                            "A children's educational programming environment",
+                            "An isolated security mechanism that runs untrusted programs in a restricted operating environment to prevent system damage",
+                            "Testing software updates on physical sand-covered server benches",
+                            "A method for backing up database transaction logs"
+                        ],
+                        correct: 1,
+                        comment: "Sandboxing isolates execution environments, restricting untrusted code or applications from accessing local files, network interfaces, or system resources."
+                    },
+                    {
+                        q: "What is a zero-day vulnerability?",
+                        options: [
+                            "A software bug that takes zero days to patch",
+                            "An unknown vulnerability that has been exploited by attackers before the software vendor is aware of it or has released a patch",
+                            "A security policy that expires on day zero",
+                            "A computer virus that deletes itself after 24 hours"
+                        ],
+                        correct: 1,
+                        comment: "Zero-day vulnerabilities represent critical security flaws unknown to vendors, leaving zero days of prior defense before exploitation occurs."
+                    },
+                    {
+                        q: "What is software patching?",
+                        options: [
+                            "Physically soldering new microchips onto server motherboards",
+                            "Applying software updates provided by vendors to fix security vulnerabilities, bugs, or improve stability",
+                            "Stitching together disconnected source code repositories",
+                            "Replacing damaged fiber-optic network cables"
+                        ],
+                        correct: 1,
+                        comment: "Patch management is critical for closing known security loopholes and protecting systems against published exploit vectors."
+                    },
+                    {
+                        q: "What is format string vulnerability?",
+                        options: [
+                            "An error in formatting text strings for graphical user interfaces",
+                            "A software flaw where untrusted user input is passed directly as the format argument to functions like printf, allowing memory reading or writing",
+                            "A syntax error in SQL string concatenation",
+                            "An invalid JSON data structure format"
+                        ],
+                        correct: 1,
+                        comment: "Format string bugs occur when formatting functions interpret user input as format specifiers, enabling attackers to dump stack memory or overwrite arbitrary addresses."
+                    },
+                    {
+                        q: "What is least privilege execution in operating systems?",
+                        options: [
+                            "Running every application with kernel root privileges",
+                            "Executing application processes with restricted user privileges rather than administrative rights",
+                            "Minimizing the number of files stored in operating system directories",
+                            "Reducing CPU clock frequency during idle periods"
+                        ],
+                        correct: 1,
+                        comment: "Running services (like web servers or databases) under unprivileged service accounts limits the blast radius if an application is compromised."
+                    },
+                    {
+                        q: "What is trusted boot (Secure Boot)?",
+                        options: [
+                            "Booting computers using encrypted USB flash drives",
+                            "A UEFI firmware security feature that verifies digital signatures of bootloaders and operating system kernels before execution",
+                            "Automatically rebooting crashed servers every midnight",
+                            "A password-protected BIOS setup screen"
+                        ],
+                        correct: 1,
+                        comment: "Secure Boot prevents rootkits and boot-sector malware by cryptographically verifying the integrity of boot components prior to system startup."
+                    },
+                    {
+                        q: "What is memory leakage in software applications?",
+                        options: [
+                            "Physical water dripping onto RAM modules",
+                            "The failure of a computer program to release dynamically allocated memory back to the operating system when no longer needed",
+                            "Unauthorized wireless reading of RAM contents",
+                            "Loss of data due to sudden power outages"
+                        ],
+                        correct: 1,
+                        comment: "Memory leaks consume increasing amounts of system RAM over time, potentially leading to resource exhaustion, application crashes, and denial of service."
+                    },
+                    {
+                        q: "What is fuzzing (fuzz testing) in software security assessment?",
+                        options: [
+                            "Testing audio clarity in VoIP telephone systems",
+                            "An automated software testing technique that injects semi-random, malformed, or unexpected inputs into a program to uncover crashes and bugs",
+                            "Blurring sensitive images in security camera feeds",
+                            "Measuring wireless signal propagation through walls"
+                        ],
+                        correct: 1,
+                        comment: "Fuzzing bombards applications with invalid or random input data to expose unhandled exceptions, buffer overflows, and memory corruption vulnerabilities."
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Chapter 4: Management Issues",
+                questions: [
+                    {
+                        q: "What is the primary purpose of an Information Security Management System (ISMS)?",
+                        options: [
+                            "To manage employee payroll and benefits",
+                            "To provide a systematic approach for managing sensitive company information through comprehensive risk management and security controls",
+                            "To maintain network hardware inventory databases",
+                            "To configure enterprise router firmware"
+                        ],
+                        correct: 1,
+                        comment: "An ISMS is a holistic framework of policies, procedures, and controls managed to protect organizational information assets against threats and vulnerabilities."
+                    },
+                    {
+                        q: "Which international standard specifies requirements for establishing, implementing, and maintaining an ISMS?",
+                        options: ["ISO/IEC 27001", "ISO 9001", "IEEE 802.3", "PCI-DSS v3.2"],
+                        correct: 0,
+                        comment: "ISO/IEC 27001 is the internationally recognized benchmark standard for information security management systems, guiding risk assessment and security controls."
+                    },
+                    {
+                        q: "What is background screening in human resources security?",
+                        options: [
+                            "Testing computer monitor radiation levels",
+                            "Verifying the credentials, employment history, criminal record, and references of job candidates prior to hiring",
+                            "Checking the lighting levels in office workspaces",
+                            "Screening incoming email for spam"
+                        ],
+                        correct: 1,
+                        comment: "Background screening mitigates insider threats by vetting candidates' trustworthiness, qualifications, and history before granting access to sensitive assets."
+                    },
+                    {
+                        q: "What is the purpose of security awareness training for employees?",
+                        options: [
+                            "To teach staff how to repair server hardware failures",
+                            "To educate employees on recognizing phishing, social engineering, and security policies to prevent human error breaches",
+                            "To train IT staff in advanced C++ programming",
+                            "To enforce corporate dress codes"
+                        ],
+                        correct: 1,
+                        comment: "Employees are often the weakest link in security; regular awareness training equips staff to identify social engineering and adhere to security protocols."
+                    },
+                    {
+                        q: "What is social engineering in the context of computer security attacks?",
+                        options: [
+                            "Manipulating human psychology and trust to trick individuals into divulging confidential information or granting unauthorized access",
+                            "Designing user interfaces for social media applications",
+                            "Analyzing network traffic patterns using statistical algorithms",
+                            "Configuring social network privacy settings"
+                        ],
+                        correct: 0,
+                        comment: "Social engineering exploits human trust, helpfulness, or fear (via phishing, pretexting, or tailgating) to bypass technical security controls."
+                    },
+                    {
+                        q: "What is a phishing attack?",
+                        options: [
+                            "Catching fish using electronic sonar probes",
+                            "A fraudulent communication (typically email) designed to mimic a trusted entity to trick victims into revealing sensitive credentials or financial data",
+                            "Intercepting Wi-Fi packets in public coffee shops",
+                            "Flooding a web server with fake HTTP requests"
+                        ],
+                        correct: 1,
+                        comment: "Phishing uses deceptive emails and messaging to impersonate legitimate organizations, inducing victims to click malicious links or surrender passwords."
+                    },
+                    {
+                        q: "What is spear phishing?",
+                        options: [
+                            "Phishing conducted using physical spear-fishing equipment",
+                            "A targeted phishing campaign directed at specific individuals, executives, or employees within an organization",
+                            "Phishing attacks sent via SMS text messages",
+                            "Automated mass email spam distribution"
+                        ],
+                        correct: 1,
+                        comment: "Spear phishing personalizes fraudulent messages using target research, making attacks highly convincing and difficult to detect."
+                    },
+                    {
+                        q: "What is whaling in cyber security?",
+                        options: [
+                            "Illegal fishing in international waters",
+                            "A specialized spear-phishing attack specifically targeting high-profile senior executives (C-level officers) within an organization",
+                            "Attacking large mainframe storage clusters",
+                            "Broadcasting Wi-Fi signals over long distances"
+                        ],
+                        correct: 1,
+                        comment: "Whaling targets executives and high-ranking officials to access sensitive corporate accounts, financial wire transfers, or proprietary data."
+                    },
+                    {
+                        q: "What is tailgating (piggybacking) in physical security?",
+                        options: [
+                            "Following closely behind a vehicle on a highway",
+                            "An unauthorized person closely following an authorized employee through a secure physical door or turnstile without proper credentials",
+                            "Attaching unauthorized hard drives to server motherboards",
+                            "Monitoring network traffic from behind a firewall"
+                        ],
+                        correct: 1,
+                        comment: "Tailgating bypasses physical access controls by exploiting human courtesy when individuals hold doors open for following strangers."
+                    },
+                    {
+                        q: "What is an acceptable use policy (AUP)?",
+                        options: [
+                            "A document outlining what users are and are not permitted to do when using company hardware, networks, and internet access",
+                            "An agreement for purchasing software licenses",
+                            "A policy defining acceptable office temperature ranges",
+                            "A guide for cloud server storage quotas"
+                        ],
+                        correct: 0,
+                        comment: "An AUP establishes clear behavioral boundaries and rules for employees utilizing organizational IT resources, protecting against misuse."
+                    },
+                    {
+                        q: "What is business continuity planning (BCP)?",
+                        options: [
+                            "Planning corporate holiday parties and social events",
+                            "Creating strategies, plans, and procedures to ensure an organization can continue operating during and after a significant disruption or disaster",
+                            "Managing employee career progression and promotions",
+                            "Balancing corporate quarterly financial budgets"
+                        ],
+                        correct: 1,
+                        comment: "BCP ensures organizational resilience, maintaining core business operations during disruptions ranging from cyber attacks to natural disasters."
+                    },
+                    {
+                        q: "What is a disaster recovery plan (DRP)?",
+                        options: [
+                            "A plan specifically focused on restoring IT infrastructure, data systems, and communications after a disruptive event",
+                            "An evacuation route guide for office fires",
+                            "A financial audit checklist for bankruptcy",
+                            "A procedure for replacing broken office furniture"
+                        ],
+                        correct: 0,
+                        comment: "DRP is a subset of business continuity focused specifically on technical recovery of IT systems, data centers, and networks following a disaster."
+                    },
+                    {
+                        q: "What is a Recovery Point Objective (RPO)?",
+                        options: [
+                            "The maximum acceptable amount of data loss measured in time following a disruption",
+                            "The time it takes to restore server power supplies",
+                            "The financial cost of recovering lost database records",
+                            "The deadline for completing software patch installations"
+                        ],
+                        correct: 0,
+                        comment: "RPO defines how much data an organization can afford to lose; if RPO is 4 hours, backups must occur frequently enough to ensure data loss does not exceed 4 hours."
+                    },
+                    {
+                        q: "What is a Recovery Time Objective (RTO)?",
+                        options: [
+                            "The maximum acceptable duration of time that a system or service can remain offline following a disaster",
+                            "The time required to run an antivirus system scan",
+                            "The duration of employee security awareness training",
+                            "The time taken to compile large software projects"
+                        ],
+                        correct: 0,
+                        comment: "RTO specifies the maximum acceptable downtime duration before business operations are severely impacted by system outages."
+                    },
+                    {
+                        q: "What is intellectual property (IP) protection in legal and ethical aspects of IT?",
+                        options: [
+                            "Protecting server internet protocol addresses from spoofing",
+                            "Legal safeguards (copyrights, patents, trademarks, trade secrets) protecting creations of the mind and software code from theft",
+                            "Securing IP security cameras against hacking",
+                            "Registering domain names with ICANN"
+                        ],
+                        correct: 1,
+                        comment: "IP protection safeguards proprietary software, algorithms, designs, and data from unauthorized use, reproduction, or commercial theft."
+                    },
+                    {
+                        q: "What is the General Data Protection Regulation (GDPR)?",
+                        options: [
+                            "A global hardware manufacturing quality standard",
+                            "A comprehensive data privacy and protection regulation enacted by the European Union governing personal data processing and privacy",
+                            "An IEEE standard for wireless network encryption",
+                            "A federal guideline for military network security"
+                        ],
+                        correct: 1,
+                        comment: "GDPR sets stringent legal standards for privacy and data protection for individuals within the EU, mandating strict controls on personal data handling."
+                    },
+                    {
+                        q: "What is the principle of segregation of duties (SoD)?",
+                        options: [
+                            "Assigning all administrative tasks to a single senior engineer",
+                            "Dividing critical tasks and responsibilities among multiple individuals so no single person has complete control over a sensitive process",
+                            "Separating office workstations into isolated departments",
+                            "Isolating guest Wi-Fi from corporate LAN networks"
+                        ],
+                        correct: 1,
+                        comment: "Segregation of duties prevents fraud and errors by ensuring that critical transactions require collaboration and approval from distinct individuals."
+                    },
+                    {
+                        q: "What is incident response management?",
+                        options: [
+                            "Ignoring security alerts until system crashes occur",
+                            "An organized approach to addressing and managing the aftermath of a security breach or cyber attack to limit damage and recovery time",
+                            "Responding to customer technical support inquiries",
+                            "Fixing bugs in software source code repositories"
+                        ],
+                        correct: 1,
+                        comment: "Incident response frameworks guide organizations through preparation, detection, containment, eradication, recovery, and post-incident analysis."
+                    },
+                    {
+                        q: "What is a security baseline configuration?",
+                        options: [
+                            "The minimum mandatory security settings required for all hardware and software systems across an organization",
+                            "The baseline speed of internet connection bandwidth",
+                            "The starting price of enterprise security software licenses",
+                            "The initial password assigned to new employees"
+                        ],
+                        correct: 0,
+                        comment: "Security baselines establish standardized, secure configuration benchmarks (such as CIS benchmarks) ensuring systems are deployed with hardened postures."
+                    },
+                    {
+                        q: "What is ethical hacking (penetration testing)?",
+                        options: [
+                            "Stealing competitor intellectual property for commercial advantage",
+                            "Authorized security testing where professionals simulate cyber attacks against systems to identify vulnerabilities before malicious hackers do",
+                            "Writing malicious malware for academic research",
+                            "Bypassing company firewall rules without authorization"
+                        ],
+                        correct: 1,
+                        comment: "Ethical hacking employs adversarial techniques with explicit organizational authorization to discover security weaknesses and fortify defenses."
+                    },
+                    {
+                        q: "What is vendor risk management (third-party risk)?",
+                        options: [
+                            "Managing office supply deliveries and invoices",
+                            "The process of identifying, assessing, and mitigating security risks posed by external vendors, suppliers, and service providers",
+                            "Negotiating software licensing discounts with Microsoft",
+                            "Testing vendor hardware durability"
+                        ],
+                        correct: 1,
+                        comment: "Vendor risk management ensures that third-party partners adhere to adequate security standards so they do not introduce vulnerabilities into the supply chain."
+                    },
+                    {
+                        q: "What is mandatory vacation policy in security governance?",
+                        options: [
+                            "Requiring employees to take paid time off while temporarily reassigning their duties to uncover ongoing fraudulent activities",
+                            "Closing company offices during national holidays",
+                            "Providing server administrators time to learn new programming languages",
+                            "Allowing remote work during summer months"
+                        ],
+                        correct: 0,
+                        comment: "Mandatory vacation policies act as a fraud detection control because financial or system embezzlement often requires continuous personal oversight to conceal."
+                    },
+                    {
+                        q: "What is an information security audit?",
+                        options: [
+                            "An independent, systematic evaluation of an organization's information security policies, controls, and procedures",
+                            "Counting physical laptops in employee cubicles",
+                            "Checking monthly internet service provider bills",
+                            "Measuring employee typing speed and accuracy"
+                        ],
+                        correct: 0,
+                        comment: "Security audits provide objective verification of compliance, control effectiveness, and risk posture by independent assessors."
+                    },
+                    {
+                        q: "What is whistleblower protection in ethical governance?",
+                        options: [
+                            "Providing referees with whistles during company sports events",
+                            "Legal and organizational protection ensuring employees can report unethical, illegal, or security-violating practices without fear of retaliation",
+                            "Installing acoustic alarms in server rooms",
+                            "A protocol for alerting police during burglaries"
+                        ],
+                        correct: 1,
+                        comment: "Whistleblower protections encourage ethical reporting of organizational wrongdoing, compliance violations, and critical security hazards."
+                    },
+                    {
+                        q: "What is risk acceptance as a risk treatment strategy?",
+                        options: [
+                            "Ignoring all security threats permanently",
+                            "Acknowledging a risk and deciding not to take corrective action because the cost of mitigation outweighs the potential impact",
+                            "Purchasing comprehensive insurance coverage for all assets",
+                            "Eliminating the business process entirely"
+                        ],
+                        correct: 1,
+                        comment: "Risk acceptance occurs when management deliberately chooses to absorb potential loss exposure because mitigation costs exceed the expected loss value."
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Chapter 5: Cryptographic Algorithms",
+                questions: [
+                    {
+                        q: "What is symmetric encryption?",
+                        options: [
+                            "An encryption method where a single shared secret key is used for both encryption and decryption of data",
+                            "Using two different keys (public and private) for encryption",
+                            "Encrypting data without using any cryptographic keys",
+                            "An algorithm that generates random numbers"
+                        ],
+                        correct: 0,
+                        comment: "Symmetric encryption relies on a single shared secret key known to both communicating parties, offering high performance for bulk data encryption."
+                    },
+                    {
+                        q: "What is asymmetric encryption (public-key cryptography)?",
+                        options: [
+                            "Using a single shared key across all network nodes",
+                            "An encryption system utilizing a key pair: a public key for encryption (or signature verification) and a private key for decryption (or signing)",
+                            "An algorithm that changes key lengths dynamically",
+                            "Encrypting data with unequal file sizes"
+                        ],
+                        correct: 1,
+                        comment: "Asymmetric cryptography solves the key distribution problem by employing mathematical key pairs where what is encrypted with one key can only be decrypted by the other."
+                    },
+                    {
+                        q: "What is a cryptographic hash function?",
+                        options: [
+                            "A reversible encryption algorithm used to hide passwords",
+                            "A mathematical algorithm that converts input data of arbitrary size into a fixed-size string of characters (digest) that is one-way and collision-resistant",
+                            "An algorithm for scrambling network packet headers",
+                            "A tool for compressing large video files"
+                        ],
+                        correct: 1,
+                        comment: "Hash functions transform input into a unique fixed-length digest; they are one-way (non-reversible) and deterministic, used for integrity verification."
+                    },
+                    {
+                        q: "What is the Advanced Encryption Standard (AES)?",
+                        options: [
+                            "An outdated public-key encryption algorithm replaced by RSA",
+                            "A widely adopted symmetric block cipher established by NIST, supporting key lengths of 128, 192, and 256 bits",
+                            "A cryptographic hash function used for digital signatures",
+                            "A protocol for securing wireless network connections"
+                        ],
+                        correct: 1,
+                        comment: "AES is the global gold standard for symmetric encryption, offering robust security and efficiency across hardware and software platforms."
+                    },
+                    {
+                        q: "What is RSA algorithm used for primarily?",
+                        options: [
+                            "Bulk video streaming encryption",
+                            "Asymmetric cryptography used for secure key exchange, digital signatures, and encryption",
+                            "Generating cryptographic hash digests",
+                            "Compressing database backup files"
+                        ],
+                        correct: 1,
+                        comment: "RSA is a foundational asymmetric algorithm based on the mathematical difficulty of factoring large prime numbers, widely used for secure key exchange."
+                    },
+                    {
+                        q: "What is a digital signature?",
+                        options: [
+                            "A scanned image of a handwritten signature attached to a PDF",
+                            "A cryptographic value calculated from data and a private key that allows anyone to verify the origin, authenticity, and integrity of the data",
+                            "A password required to unlock a smartphone screen",
+                            "An encrypted TLS tunnel session key"
+                        ],
+                        correct: 1,
+                        comment: "Digital signatures provide authenticity, non-repudiation, and integrity by signing a message hash with the sender's private key."
+                    },
+                    {
+                        q: "What is quantum cryptography (Quantum Key Distribution - QKD)?",
+                        options: [
+                            "Encrypting data using quantum supercomputers to crack passwords",
+                            "A secure communication method using quantum mechanics principles (such as photon polarization) to detect eavesdropping during key exchange",
+                            "Using quantum algorithms to speed up brute-force attacks",
+                            "A theoretical encryption standard for quantum hard drives"
+                        ],
+                        correct: 1,
+                        comment: "QKD leverages quantum mechanics; any interception attempts disturb quantum states, alerting communicating parties to potential eavesdropping."
+                    },
+                    {
+                        q: "What is steganography?",
+                        options: [
+                            "Encrypting text using complex mathematical formulas",
+                            "The practice of concealing secret messages, files, or data within ordinary, non-secret cover media (such as images, audio, or video)",
+                            "Compressing digital photographs to save disk space",
+                            "A protocol for secure web transmission"
+                        ],
+                        correct: 1,
+                        comment: "Steganography hides the very existence of a secret message inside carrier files, whereas cryptography scrambles the message content."
+                    },
+                    {
+                        q: "What is a hash collision?",
+                        options: [
+                            "Two computers transmitting data on a network cable simultaneously",
+                            "A situation where two distinct inputs produce the exact same cryptographic hash output value",
+                            "An error when decrypting symmetric ciphertexts",
+                            "A memory crash during RSA key generation"
+                        ],
+                        correct: 1,
+                        comment: "A hash collision occurs when different source files yield identical hash digests; cryptographic hash functions aim to be collision-resistant."
+                    },
+                    {
+                        q: "What is the purpose of cryptographic salt in password hashing?",
+                        options: [
+                            "To add flavor to database security configurations",
+                            "To add random bits to password inputs before hashing, ensuring identical passwords generate distinct hash values and defeating rainbow table attacks",
+                            "To encrypt the database connection string",
+                            "To shorten hash digest lengths for faster lookup"
+                        ],
+                        correct: 1,
+                        comment: "Salting ensures that precomputed rainbow table attacks are ineffective because each password gets a unique random salt value."
+                    },
+                    {
+                        q: "What is a block cipher?",
+                        options: [
+                            "An encryption algorithm that encrypts data one bit at a time continuously",
+                            "An encryption algorithm that operates on fixed-length blocks of data (e.g., 128 bits) using a secret key",
+                            "A firewall rule blocking specific network address blocks",
+                            "A method for breaking up large files into ZIP archives"
+                        ],
+                        correct: 1,
+                        comment: "Block ciphers (like AES and DES) process data in fixed-size blocks, utilizing modes of operation like CBC or GCM for larger messages."
+                    },
+                    {
+                        q: "What is a stream cipher?",
+                        options: [
+                            "An encryption algorithm that encrypts data bit-by-bit or byte-by-byte using a pseudo-random key stream",
+                            "A protocol for streaming encrypted video across the internet",
+                            "A hashing function for continuous log file analysis",
+                            "A database replication technique"
+                        ],
+                        correct: 0,
+                        comment: "Stream ciphers encrypt plaintext digits or bits sequentially combined with a keystream, commonly used in resource-constrained or real-time scenarios."
+                    },
+                    {
+                        q: "What is Public Key Infrastructure (PKI)?",
+                        options: [
+                            "A physical room housing server hardware and routers",
+                            "A framework of policies, hardware, software, and procedures needed to create, manage, distribute, use, store, and revoke digital certificates",
+                            "An inventory system for public IP addresses",
+                            "A database of cryptographic keys used by hackers"
+                        ],
+                        correct: 1,
+                        comment: "PKI manages digital certificates and public-key encryption, enabling trusted electronic commerce, secure web browsing, and authentication."
+                    },
+                    {
+                        q: "What is a digital certificate?",
+                        options: [
+                            "A certificate earned after completing an online cybersecurity course",
+                            "An electronic document used to prove the ownership of a public key, issued and digitally signed by a trusted Certificate Authority (CA)",
+                            "A password recovery token sent via email",
+                            "A license agreement for commercial software"
+                        ],
+                        correct: 1,
+                        comment: "Digital certificates bind public keys to organizational identities, facilitating secure trust verification across TLS/SSL connections."
+                    },
+                    {
+                        q: "What is a Certificate Authority (CA)?",
+                        options: [
+                            "A government agency regulating computer hardware imports",
+                            "A trusted third-party organization that issues, signs, and revokes digital certificates",
+                            "An administrative server managing local user accounts",
+                            "A software tool for cracking cryptographic keys"
+                        ],
+                        correct: 1,
+                        comment: "CAs act as trusted anchors in PKI, validating entity identities and issuing digitally signed certificates used in secure communications."
+                    },
+                    {
+                        q: "What is forward secrecy (Perfect Forward Secrecy - PFS)?",
+                        options: [
+                            "Encrypting future emails before they are written",
+                            "A property of secure communication sessions ensuring that compromise of long-term private keys does not compromise past session keys",
+                            "Backing up cryptographic keys to secure cloud storage",
+                            "Using longer cryptographic keys for future encryption standards"
+                        ],
+                        correct: 1,
+                        comment: "PFS ensures past encrypted sessions remain secure even if server private keys are stolen in the future, by generating unique session keys."
+                    },
+                    {
+                        q: "What is SHA-256?",
+                        options: [
+                            "A symmetric encryption algorithm with a 256-bit key",
+                            "A cryptographic hash function belonging to the SHA-2 family that produces a 256-bit (32-byte) hash digest",
+                            "A protocol for secure file sharing over networks",
+                            "An asymmetric encryption standard for digital signatures"
+                        ],
+                        correct: 1,
+                        comment: "SHA-256 is a widely trusted cryptographic hash function producing a 256-bit output, heavily utilized in blockchain, TLS certificates, and file integrity checks."
+                    },
+                    {
+                        q: "What is a rainbow table attack?",
+                        options: [
+                            "An attack using colorful graphical interfaces to trick users",
+                            "A precomputed table for reversing cryptographic hash functions (such as password hashes) by matching outputs against precalculated hash chains",
+                            "An attack targeting wireless router encryption channels",
+                            "A Denial-of-Service attack launched from cloud servers"
+                        ],
+                        correct: 1,
+                        comment: "Rainbow tables store precomputed hash values for common passwords, allowing rapid lookup to crack unsalted password hashes."
+                    },
+                    {
+                        q: "What is key escrow?",
+                        options: [
+                            "Stolen cryptographic keys sold on underground forums",
+                            "An arrangement where cryptographic keys are held in escrow by a trusted third party so an authorized entity (such as government or employer) may access them",
+                            "Backing up keys to encrypted USB drives",
+                            "The process of securely deleting expired keys"
+                        ],
+                        correct: 1,
+                        comment: "Key escrow stores private keys with trusted third parties, enabling authorized recovery under specific legal or enterprise policy conditions."
+                    },
+                    {
+                        q: "What is ciphertext?",
+                        options: [
+                            "Original unencrypted human-readable text",
+                            "Data that has been encrypted into unreadable scrambled form using a cryptographic algorithm and key",
+                            "Source code written in C++ programming language",
+                            "Error messages generated by web servers"
+                        ],
+                        correct: 1,
+                        comment: "Ciphertext is the scrambled output produced when plaintext is encrypted; it remains unreadable without the correct decryption key."
+                    },
+                    {
+                        q: "What is plaintext?",
+                        options: [
+                            "Unencrypted, readable message or data before encryption or after decryption",
+                            "Plain text files without formatting (such as .txt files)",
+                            "Source code documentation comments",
+                            "Error logs generated by operating systems"
+                        ],
+                        correct: 0,
+                        comment: "Plaintext refers to original, intelligible data prior to encryption processing or after successful decryption."
+                    },
+                    {
+                        q: "What is key length in cryptography?",
+                        options: [
+                            "The physical physical length of a metal key used in server room door locks",
+                            "The size of a cryptographic key measured in bits, directly correlating to the cryptographic strength and resistance against brute-force attacks",
+                            "The duration of time a key remains valid before expiration",
+                            "The number of characters in a user password"
+                        ],
+                        correct: 1,
+                        comment: "Key length determines the size of the keyspace; longer keys (e.g., AES-256) exponentially increase the computational work required for brute-force decryption."
+                    },
+                    {
+                        q: "What is HMAC (Hash-based Message Authentication Code)?",
+                        options: [
+                            "A hardware authentication token used by bank tellers",
+                            "A specific type of message authentication code involving a cryptographic hash function and a secret cryptographic key, ensuring integrity and authenticity",
+                            "An algorithm for compressing email messages",
+                            "A protocol for assigning IP addresses"
+                        ],
+                        correct: 1,
+                        comment: "HMAC combines cryptographic hash functions with secret keys to verify both the data integrity and authenticity of transmitted messages."
+                    },
+                    {
+                        q: "What is a cryptographic nonce?",
+                        options: [
+                            "An invalid cryptographic key",
+                            "An arbitrary number (number used once) employed once in a cryptographic communication to prevent replay attacks",
+                            "A non-functional encryption algorithm",
+                            "A type of hash collision"
+                        ],
+                        correct: 1,
+                        comment: "A nonce is a random or pseudo-random value used only once in security protocols, ensuring that captured authentication messages cannot be replayed."
+                    },
+                    {
+                        q: "What is cryptanalysis?",
+                        options: [
+                            "The process of creating new secure encryption algorithms",
+                            "The study of analyzing cryptographic systems in order to study the hidden aspects of the systems, bypass security, or decrypt ciphertexts without keys",
+                            "Installing SSL certificates on web servers",
+                            "Measuring encryption algorithm execution speed"
+                        ],
+                        correct: 1,
+                        comment: "Cryptanalysis encompasses the scientific study of breaking ciphers, finding mathematical weaknesses, and recovering plaintext or keys without authorization."
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: "Chapter 6: Networking and Distributed System Security",
+                questions: [
+                    {
+                        q: "What is Transport Layer Security (TLS)?",
+                        options: [
+                            "A physical security protocol for transport trucks carrying servers",
+                            "A cryptographic protocol designed to provide communications security over computer networks (successor to SSL)",
+                            "A router protocol for optimizing packet delivery routes",
+                            "An operating system tool for file transfers"
+                        ],
+                        correct: 1,
+                        comment: "TLS secures client-server communications over networks, providing confidentiality, integrity, and authentication via encryption and certificates."
+                    },
+                    {
+                        q: "What is the primary function of IPsec (Internet Protocol Security)?",
+                        options: [
+                            "To assign dynamic IP addresses to workstations",
+                            "To secure Internet Protocol communications by authenticating and encrypting each IP packet of a communication session",
+                            "To monitor internet bandwidth consumption",
+                            "To filter spam emails at the mail server"
+                        ],
+                        correct: 1,
+                        comment: "IPsec operates at the network layer (Layer 3), providing secure Virtual Private Network (VPN) tunnels and packet-level authentication and encryption."
+                    },
+                    {
+                        q: "What is a Virtual Private Network (VPN)?",
+                        options: [
+                            "A private local area network inside an office building",
+                            "An encrypted communications tunnel established across a public network (like the internet) that securely connects remote users or sites to a private network",
+                            "A virtual machine running inside cloud infrastructure",
+                            "A private website hosting company documents"
+                        ],
+                        correct: 1,
+                        comment: "VPNs use cryptographic tunneling (such as IPsec or OpenVPN) to extend private enterprise networks securely across public internet infrastructure."
+                    },
+                    {
+                        q: "What is packet sniffing?",
+                        options: [
+                            "Detecting foul odors in server room hardware",
+                            "Intercepting and logging network packet traffic passing across a local network segment using network monitoring tools",
+                            "Filtering spam packets at firewall boundaries",
+                            "Measuring network latency across routers"
+                        ],
+                        correct: 1,
+                        comment: "Packet sniffing (packet analysis) captures unencrypted network traffic, allowing observers to inspect plaintext credentials, headers, and payloads."
+                    },
+                    {
+                        q: "What is IP spoofing?",
+                        options: [
+                            "Assigning duplicate IP addresses to different computers",
+                            "An attack where an adversary alters packet source IP addresses to impersonate a trusted computer system",
+                            "Encrypting IP packet headers",
+                            "Scanning network ports for vulnerabilities"
+                        ],
+                        correct: 1,
+                        comment: "IP spoofing falsifies packet source addresses to bypass IP-based access controls or launch reflected DDoS attacks."
+                    },
+                    {
+                        q: "What is a man-in-the-middle (MitM) attack?",
+                        options: [
+                            "An attack where middle managers steal employee passwords",
+                            "An attack where an adversary secretly relays and possibly alters communications between two parties who believe they are directly communicating",
+                            "Physical theft of server hardware from data centers",
+                            "A firewall failure blocking mid-layer packets"
+                        ],
+                        correct: 1,
+                        comment: "MitM attacks intercept communications between clients and servers, enabling eavesdropping, credential theft, or traffic manipulation."
+                    },
+                    {
+                        q: "What is DNS poisoning (DNS spoofing)?",
+                        options: [
+                            "Injecting malware into Domain Name System server operating systems",
+                            "An attack that introduces corrupt Domain Name System data into a resolver's cache, causing the name server to return an incorrect IP address",
+                            "Flooding DNS servers with excessive lookup requests",
+                            "Deleting domain registration records"
+                        ],
+                        correct: 1,
+                        comment: "DNS poisoning redirects users from legitimate websites to malicious phishing sites by corrupting DNS cache resolution tables."
+                    },
+                    {
+                        q: "What is a port scanning tool used for?",
+                        options: [
+                            "Physically cleaning dust out of computer connection ports",
+                            "Probing a server or network host to identify open ports, active services, and running operating systems",
+                            "Measuring USB data transfer speeds",
+                            "Encrypting network router ports"
+                        ],
+                        correct: 1,
+                        comment: "Port scanners (such as Nmap) map network attack surfaces by identifying listening ports and running services on target hosts."
+                    },
+                    {
+                        q: "What is a distributed system in computer science?",
+                        options: [
+                            "A single computer with multiple processors",
+                            "A system whose components are located on different networked computers, which communicate and coordinate their actions by passing messages",
+                            "An office setup with computers distributed across different rooms",
+                            "A database stored on a single hard drive"
+                        ],
+                        correct: 1,
+                        comment: "Distributed systems comprise autonomous networked computers cooperating to achieve common goals, presenting unique security challenges across nodes."
+                    },
+                    {
+                        q: "What is zero-trust network architecture (ZTNA)?",
+                        options: [
+                            "Trusting all users who log into the local corporate network",
+                            "A security model centered on the belief that organizations should not trust anything inside or outside their perimeters automatically, requiring strict verification for every user and device",
+                            "Disabling all network connections permanently",
+                            "Trusting cloud providers implicitly with data security"
+                        ],
+                        correct: 1,
+                        comment: "Zero Trust abandons implicit perimeter trust, enforcing 'never trust, always verify' across every access request regardless of network location."
+                    },
+                    {
+                        q: "What is a DMZ (Demilitarized Zone) in network design?",
+                        options: [
+                            "A physical zone where military computers are stored",
+                            "A physical or logical subnetwork that exposes an organization's external-facing services to an untrusted network like the internet",
+                            "A secure internal database server cluster",
+                            "An encrypted Wi-Fi network for guests"
+                        ],
+                        correct: 1,
+                        comment: "A DMZ acts as a perimeter network buffering external traffic (like web servers) from internal corporate local area networks."
+                    },
+                    {
+                        q: "What is network segmentation?",
+                        options: [
+                            "Cutting physical Ethernet cables into smaller pieces",
+                            "Dividing a computer network into smaller subnetworks or segments to improve performance and security containment",
+                            "Compressing network traffic to save bandwidth",
+                            "Assigning static IP addresses to all printers"
+                        ],
+                        correct: 1,
+                        comment: "Network segmentation isolates critical assets and restricts lateral movement for attackers if a breach occurs within one segment."
+                    },
+                    {
+                        q: "What is a Session Hijacking attack?",
+                        options: [
+                            "Stealing physical server session logs",
+                            "An attack where an adversary takes over an active communication session between a user and a system by stealing or guessing the session token",
+                            "Locking user accounts after failed login attempts",
+                            "Interrupting TCP handshakes during connection setup"
+                        ],
+                        correct: 1,
+                        comment: "Session hijacking compromises valid session IDs or cookies, allowing attackers to impersonate authenticated users without knowing credentials."
+                    },
+                    {
+                        q: "What is Simple Network Management Protocol (SNMP) vulnerability?",
+                        options: [
+                            "SNMP does not support network monitoring",
+                            "Older versions of SNMP (v1/v2c) transmit community strings in plaintext, exposing network device configurations to eavesdropping",
+                            "SNMP causes frequent router reboots",
+                            "SNMP encrypts traffic using obsolete DES keys"
+                        ],
+                        correct: 1,
+                        comment: "Legacy SNMP protocols transmit administrative community strings in plaintext, posing severe risks unless upgraded to SNMPv3 with encryption."
+                    },
+                    {
+                        q: "What is a honeypot in network security?",
+                        options: [
+                            "A sweet tasting food kept in employee breakrooms",
+                            "A decoy computer system or network set up to detect, deflect, or study unauthorized attempts to gain access",
+                            "A database containing unencrypted user passwords",
+                            "A high-speed router caching proxy"
+                        ],
+                        correct: 1,
+                        comment: "Honeypots lure attackers away from production assets, providing valuable intelligence on threat tactics and attack vectors."
+                    },
+                    {
+                        q: "What is network latency?",
+                        options: [
+                            "The physical length of network cables",
+                            "The delay experienced in data transmission across a network from source to destination",
+                            "The storage capacity of network switches",
+                            "The encryption speed of IPsec tunnels"
+                        ],
+                        correct: 1,
+                        comment: "Latency measures transmission delay; high latency impacts real-time applications and can indicate network congestion or routing bottlenecks."
+                    },
+                    {
+                        q: "What is an intrusion prevention system (IPS) inline placement?",
+                        options: [
+                            "Placing the IPS sensor off to the side monitoring a switch mirror port",
+                            "Placing the IPS directly in the path of network traffic so it can inspect and immediately drop malicious packets",
+                            "Connecting the IPS to backup power generators",
+                            "Running IPS software on user workstations"
+                        ],
+                        correct: 1,
+                        comment: "Inline IPS placement ensures every packet passes through the inspection engine, allowing real-time blocking of detected malicious traffic."
+                    },
+                    {
+                        q: "What is RADIUS (Remote Authentication Dial-In User Service)?",
+                        options: [
+                            "A protocol for calculating wireless signal radius",
+                            "A networking protocol providing centralized Authentication, Authorization, and Accounting (AAA) management for users connecting to network services",
+                            "A cryptographic key exchange algorithm",
+                            "A firewall packet filtering tool"
+                        ],
+                        correct: 1,
+                        comment: "RADIUS is an industry-standard AAA protocol used extensively by network access servers, VPNs, and wireless controllers."
+                    },
+                    {
+                        q: "What is TACACS+ (Terminal Access Controller Access-Control System Plus)?",
+                        options: [
+                            "An outdated terminal emulation program",
+                            "An AAA protocol developed by Cisco that separates authentication, authorization, and accounting into distinct processes for administrative device access",
+                            "A protocol for secure web browsing",
+                            "A database replication tool"
+                        ],
+                        correct: 1,
+                        comment: "TACACS+ provides robust administrative access control for network devices, encrypting the entire packet body during authentication."
+                    },
+                    {
+                        q: "What is 802.1X network access control?",
+                        options: [
+                            "An IEEE standard for Wi-Fi radio frequencies",
+                            "An IEEE standard for port-based Network Access Control (PNAC) that provides authenticated network access to wired and wireless clients",
+                            "A specification for Ethernet cable maximum length",
+                            "A protocol for assigning IP addresses"
+                        ],
+                        correct: 1,
+                        comment: "802.1X authenticates devices connecting to LAN or WLAN ports before granting access to network resources, integrating with RADIUS servers."
+                    },
+                    {
+                        q: "What is a proxy server?",
+                        options: [
+                            "A voting server used during corporate elections",
+                            "An intermediary server acting as a gateway between client applications and target servers, providing caching, filtering, and anonymity",
+                            "A backup server for database replicas",
+                            "A physical router connecting two different local networks"
+                        ],
+                        correct: 1,
+                        comment: "Proxy servers handle client requests on behalf of destination servers, hiding internal network topologies and enabling content filtering."
+                    },
+                    {
+                        q: "What is network flooding?",
+                        options: [
+                            "Physical water damage in server room floor cables",
+                            "An overwhelming surge of network traffic sent to a target host or switch, exhausting capacity and causing service failure",
+                            "Automatic backup of network log files",
+                            "High-speed data transfer across fiber optic links"
+                        ],
+                        correct: 1,
+                        comment: "Network flooding (such as SYN floods) overwhelms buffer queues and processing threads, resulting in denial of service."
+                    },
+                    {
+                        q: "What is a Virtual Local Area Network (VLAN)?",
+                        options: [
+                            "A physical room containing virtual machines",
+                            "A partitioned broadcast domain within a switched network that is logically segmented by function or department rather than physical location",
+                            "A VPN tunnel across public internet connections",
+                            "An encrypted Wi-Fi channel"
+                        ],
+                        correct: 1,
+                        comment: "VLANs group network devices logically regardless of physical switch connections, enhancing security and broadcast traffic management."
+                    },
+                    {
+                        q: "What is network perimeter security?",
+                        options: [
+                            "Building high fences around data center buildings",
+                            "Security controls (such as firewalls, IDPS, and boundary routers) positioned at the edge where an internal network meets external networks",
+                            "Encrypting internal hard drive partitions",
+                            "Configuring password complexity policies"
+                        ],
+                        correct: 1,
+                        comment: "Perimeter security guards the boundary between trusted internal networks and untrusted external environments like the internet."
+                    },
+                    {
+                        q: "What is Secure Shell (SSH)?",
+                        options: [
+                            "A secure operating system shell prompt color",
+                            "A cryptographic network protocol for operating network services securely over an unsecured network, providing secure remote login and command execution",
+                            "A protocol for secure email transmission",
+                            "An encryption tool for database files"
+                        ],
+                        correct: 1,
+                        comment: "SSH replaces insecure legacy protocols like Telnet and rlogin, providing robust authentication and encrypted tunneling for administrative access."
+                    }
+                ]
+            },
+            {
+                id: 6,
+                title: "Chapter 7: Wireless Network Security",
+                questions: [
+                    {
+                        q: "What is Wired Equivalent Privacy (WEP)?",
+                        options: [
+                            "A highly secure modern Wi-Fi encryption standard",
+                            "An obsolete and highly vulnerable security protocol for 802.11 wireless networks using the RC4 stream cipher",
+                            "A wired network cable specification",
+                            "A protocol for Bluetooth pairing"
+                        ],
+                        correct: 1,
+                        comment: "WEP was proven cryptographically weak due to flawed initialization vector (IV) implementation and is easily cracked within minutes."
+                    },
+                    {
+                        q: "What is WPA2 (Wi-Fi Protected Access 2)?",
+                        options: [
+                            "An insecure wireless protocol replaced by WEP",
+                            "A wireless security protocol utilizing the Advanced Encryption Standard (AES) with CCMP for robust encryption",
+                            "A protocol for cellular mobile data transmission",
+                            "An authentication standard for Bluetooth devices"
+                        ],
+                        correct: 1,
+                        comment: "WPA2 replaced WEP, implementing strong AES encryption to secure wireless frames against eavesdropping and tampering."
+                    },
+                    {
+                        q: "What is WPA3?",
+                        options: [
+                            "An outdated wireless protocol from 1999",
+                            "The latest Wi-Fi security standard offering enhanced encryption, robust protection against offline dictionary attacks, and individualized data encryption in open networks",
+                            "A protocol for satellite communications",
+                            "A Bluetooth pairing standard"
+                        ],
+                        correct: 1,
+                        comment: "WPA3 modernizes wireless security with Simultaneous Authentication of Equals (SAE) handshake and 128/256-bit encryption standards."
+                    },
+                    {
+                        q: "What is a rogue access point?",
+                        options: [
+                            "An authorized router malfunctioning due to heat",
+                            "An unauthorized wireless access point installed on a secure corporate network without administrative approval, creating security bypass risks",
+                            "A mobile phone hotspot sharing cellular data",
+                            "A public Wi-Fi router in a coffee shop"
+                        ],
+                        correct: 1,
+                        comment: "Rogue access points bypass corporate perimeter firewalls, allowing attackers to connect directly to internal LAN segments."
+                    },
+                    {
+                        q: "What is an evil twin attack in wireless security?",
+                        options: [
+                            "Two identical routers connected to the same switch",
+                            "A fraudulent rogue Wi-Fi access point configured to mimic a legitimate public or corporate network to eavesdrop on user traffic",
+                            "A malware virus attacking mobile phone operating systems",
+                            "A Bluetooth device pairing conflict"
+                        ],
+                        correct: 1,
+                        comment: "Evil twin APs trick wireless clients into connecting by spoofing legitimate SSIDs, enabling credential harvesting and man-in-the-middle interception."
+                    },
+                    {
+                        q: "What is Bluetooth security vulnerability known as Bluejacking?",
+                        options: [
+                            "Stealing physical Bluetooth headphones",
+                            "Sending unsolicited text or business card messages to Bluetooth-enabled devices within radio range",
+                            "Cracking Bluetooth encryption keys",
+                            "Intercepting cellular voice calls"
+                        ],
+                        correct: 1,
+                        comment: "Bluejacking is generally harmless prank messaging exploiting Bluetooth discovery features without stealing device data."
+                    },
+                    {
+                        q: "What is Bluesnarfing?",
+                        options: [
+                            "Quickly charging Bluetooth device batteries",
+                            "Unauthorized access to information (such as contact lists and calendars) from a wireless device through a Bluetooth connection",
+                            "Intercepting Wi-Fi router passwords",
+                            "A denial of service attack against mobile phones"
+                        ],
+                        correct: 1,
+                        comment: "Bluesnarfing is a serious security breach where attackers steal private data from vulnerable paired or discoverable Bluetooth devices."
+                    },
+                    {
+                        q: "What is wireless wardriving?",
+                        options: [
+                            "Driving autonomous vehicles using wireless remotes",
+                            "The act of searching for Wi-Fi wireless networks from a moving vehicle using a laptop, smartphone, or specialized antenna",
+                            "Testing car navigation system GPS security",
+                            "Racing remote-controlled cars via Bluetooth"
+                        ],
+                        correct: 1,
+                        comment: "Wardriving maps wireless network locations and security postures, historically used by enthusiasts and malicious actors alike."
+                    },
+                    {
+                        q: "What is Wi-Fi Protected Setup (WPS) vulnerability?",
+                        options: [
+                            "WPS is the most secure wireless setup method",
+                            "A flaw in the WPS PIN authentication feature that allows attackers to brute-force the PIN and recover WPA/WPA2 pre-shared keys rapidly",
+                            "A hardware defect in router power adapters",
+                            "An error in Bluetooth pairing codes"
+                        ],
+                        correct: 1,
+                        comment: "WPS PIN design flaws allowed rapid brute-forcing of the 8-digit PIN, compromising enterprise and home Wi-Fi keys."
+                    },
+                    {
+                        q: "What is mobile device management (MDM)?",
+                        options: [
+                            "Managing mobile phone billing invoices",
+                            "Software solutions used by organizations to monitor, manage, and secure employee mobile devices (smartphones, tablets) across corporate networks",
+                            "Repairing cracked mobile phone screens",
+                            "Developing mobile application software"
+                        ],
+                        correct: 1,
+                        comment: "MDM platforms enforce security policies, remote wipe capabilities, app distribution, and encryption on enterprise mobile endpoints."
+                    },
+                    {
+                        q: "What is Near Field Communication (NFC) security risk?",
+                        options: [
+                            "NFC signals travel over hundreds of miles",
+                            "Risks include unauthorized data reading, relay attacks, and eavesdropping during close-proximity contactless transactions",
+                            "NFC deletes smartphone operating systems",
+                            "NFC causes severe battery drain"
+                        ],
+                        correct: 1,
+                        comment: "While NFC requires close physical proximity, relay attacks can amplify signals to complete fraudulent contactless payments."
+                    },
+                    {
+                        q: "What is the IEEE standard governing wireless local area networks (Wi-Fi)?",
+                        options: ["IEEE 802.3", "IEEE 802.11", "IEEE 802.15", "IEEE 802.1Q"],
+                        correct: 1,
+                        comment: "IEEE 802.11 specifies the set of media access control (MAC) and physical layer protocols for implementing wireless local area network computer communication."
+                    },
+                    {
+                        q: "What is a wireless deauthentication attack?",
+                        options: [
+                            "Permanently deleting wireless router firmware",
+                            "An attack where malicious frames disconnect clients from a wireless access point, often used to force reconnections or capture handshake data",
+                            "Revoking user passwords on domain controllers",
+                            "Resetting Bluetooth pairing keys"
+                        ],
+                        correct: 1,
+                        comment: "Deauth attacks exploit unencrypted 802.11 management frames to kick clients off Wi-Fi networks, enabling handshake capture for offline cracking."
+                    },
+                    {
+                        q: "What is cellular network security generation 5G?",
+                        options: [
+                            "An insecure protocol with no encryption",
+                            "The fifth-generation cellular technology providing enhanced data rates, broader bandwidth, and improved security architectures including mutual authentication",
+                            "A protocol exclusively for satellite phones",
+                            "An obsolete analog radio standard"
+                        ],
+                        correct: 1,
+                        comment: "5G introduces advanced security features like encrypted subscriber identifiers and mutual network authentication, improving over 4G/3G."
+                    },
+                    {
+                        q: "What is SIM swapping (SIM hijacking)?",
+                        options: [
+                            "Exchanging physical SIM cards between friends",
+                            "An attack where fraudsters trick mobile carriers into transferring a victim's phone number to a SIM card controlled by the attacker to intercept SMS 2FA codes",
+                            "Replacing damaged smartphone batteries",
+                            "Upgrading mobile phone data plans"
+                        ],
+                        correct: 1,
+                        comment: "SIM swapping compromises SMS-based multi-factor authentication by hijacking victims' mobile phone numbers."
+                    },
+                    {
+                        q: "What is a wireless beacon frame?",
+                        options: [
+                            "A physical light on a router indicating power status",
+                            "A management frame transmitted periodically by a wireless access point to announce its presence and broadcast network parameters (SSID)",
+                            "An error log entry generated during connection failure",
+                            "A cryptographic key exchange packet"
+                        ],
+                        correct: 1,
+                        comment: "Beacon frames broadcast SSID information and network capabilities, allowing client devices to discover available wireless networks."
+                    },
+                    {
+                        q: "What is a captive portal in wireless networking?",
+                        options: [
+                            "A physical cage protecting router hardware",
+                            "A web page displayed to newly connected users of a public Wi-Fi network before they are granted broader internet access, often requiring terms acceptance or login",
+                            "A software firewall blocking unauthorized TCP ports",
+                            "An encryption tunnel for VPN connections"
+                        ],
+                        correct: 1,
+                        comment: "Captive portals intercept initial web traffic on public networks for authentication, payment, or policy agreement."
+                    },
+                    {
+                        q: "What is Bluetooth Low Energy (BLE) security consideration?",
+                        options: [
+                            "BLE consumes zero power and cannot be intercepted",
+                            "BLE devices often feature minimal user interfaces and limited cryptographic capabilities, posing pairing and tracking risks (beacon tracking)",
+                            "BLE requires high-voltage power supplies",
+                            "BLE only operates over wired USB cables"
+                        ],
+                        correct: 1,
+                        comment: "BLE powers IoT and beacons, but weak implementations can expose devices to tracking, spoofing, and unauthorized connection."
+                    },
+                    {
+                        q: "What is SSID hiding?",
+                        options: [
+                            "Encrypting wireless network passwords",
+                            "Configuring a wireless access point not to broadcast its Service Set Identifier (SSID) in beacon frames",
+                            "Physically locking wireless routers inside metal boxes",
+                            "Changing IP address ranges on local subnets"
+                        ],
+                        correct: 1,
+                        comment: "SSID hiding stops casual broadcast visibility, but network names are easily revealed by sniffing connection probe requests."
+                        },
+                    {
+                        q: "What is mobile app sandboxing?",
+                        options: [
+                            "Playing video games on mobile phones",
+                            "An operating system security mechanism that isolates mobile applications into separate secure runtime environments, restricting access to other apps and system data",
+                            "Testing mobile apps on sandy beaches",
+                            "Compressing application installation files"
+                        ],
+                        correct: 1,
+                        comment: "Mobile OS sandboxing prevents malicious apps from accessing private data or files belonging to other installed applications."
+                    },
+                    {
+                        q: "What is wireless signal jamming?",
+                        options: [
+                            "Playing loud music through wireless speakers",
+                            "An intentional or unintentional transmission of radio signals that disrupts wireless communications by causing electromagnetic interference",
+                            "Compressing wireless network data packets",
+                            "Blocking TCP ports on firewalls"
+                        ],
+                        correct: 1,
+                        comment: "Wireless jamming floods radio frequencies with noise, denying legitimate clients access to Wi-Fi or cellular network channels."
+                    },
+                    {
+                        q: "What is mobile device encryption?",
+                        options: [
+                            "Encrypting text messages sent via SMS",
+                            "Securing all data stored on smartphone internal storage media using cryptographic keys so it remains unreadable if the device is lost or stolen",
+                            "Password protecting voicemail boxes",
+                            "Using secure mobile web browsers"
+                        ],
+                        correct: 1,
+                        comment: "Full-disk encryption on iOS and Android protects stored user data against physical extraction and forensic inspection."
+                    },
+                    {
+                        q: "What is Wi-Fi roaming security?",
+                        options: [
+                            "Using Wi-Fi networks while traveling internationally",
+                            "The security mechanisms (such as 802.11r Fast BSS Transition) that ensure secure, seamless re-authentication when a client device moves between access points",
+                            "Roaming data charges on mobile phone bills",
+                            "Switching between cellular and Wi-Fi networks"
+                        ],
+                        correct: 1,
+                        comment: "Roaming security protocols ensure that mobile wireless clients can transition between access points without lengthy re-authentication delays."
+                    },
+                    {
+                        q: "What is a mobile sideloading risk?",
+                        options: [
+                            "Loading physical luggage onto mobile vehicles",
+                            "Installing applications from unofficial third-party app stores or sources bypassing official app store security reviews and malware vetting",
+                            "Transferring music files via Bluetooth",
+                            "Connecting phones to desktop computers via USB"
+                        ],
+                        correct: 1,
+                        comment: "Sideloading bypasses vetted app store security checks, exposing mobile devices to trojans, spyware, and unverified software."
+                    },
+                    {
+                        q: "What is wireless MAC filtering?",
+                        options: [
+                            "Filtering network packet headers on routers",
+                            "A security setting that restricts wireless network access to devices whose physical MAC addresses are explicitly whitelisted",
+                            "Compressing Macintosh computer network traffic",
+                            "Encrypting MAC operating system hard drives"
+                        ],
+                        correct: 1,
+                        comment: "MAC filtering provides weak security because MAC addresses are easily spoofed in wireless traffic monitor modes."
+                    }
+                ]
+            },
+            {
+                id: 7,
+                title: "Chapter 8: Vulnerability Assessment and Penetration Tests",
+                questions: [
+                    {
+                        q: "What is a vulnerability assessment?",
+                        options: [
+                            "Executing malicious cyber attacks to destroy corporate servers",
+                            "A systematic examination and discovery of security flaws and vulnerabilities in computer systems, networks, and applications",
+                            "Counting physical hardware inventory in offices",
+                            "Reviewing employee performance appraisal reports"
+                        ],
+                        correct: 1,
+                        comment: "Vulnerability assessments scan systems automatically to identify, quantify, and prioritize known security weaknesses and misconfigurations."
+                    },
+                    {
+                        q: "What is a penetration test (pentest)?",
+                        options: [
+                            "Testing pen ink quality for office supplies",
+                            "An authorized simulated cyber attack performed on a computer system to evaluate its security posture and actively exploit vulnerabilities",
+                            "Running automated weekly antivirus scans",
+                            "Measuring network bandwidth throughput speed"
+                        ],
+                        correct: 1,
+                        comment: "Penetration testing goes beyond scanning by actively attempting to exploit identified vulnerabilities to evaluate real-world risk and defense resilience."
+                    },
+                    {
+                        q: "What is black-box penetration testing?",
+                        options: [
+                            "Testing software inside a dark server room",
+                            "A testing approach where the penetration tester is given zero prior knowledge or documentation about the target system, simulating an external hacker",
+                            "Testing software source code line-by-line",
+                            "Examining black-box flight data recorders"
+                        ],
+                        correct: 1,
+                        comment: "Black-box tests simulate blind external attacks where testers have no insider knowledge, discovering what an external adversary can find."
+                    },
+                    {
+                        q: "What is white-box penetration testing?",
+                        options: [
+                            "Testing systems in a brightly lit laboratory",
+                            "A testing approach where the penetration tester has full knowledge, documentation, source code, and network architecture diagrams of the target system",
+                            "Scanning wireless networks in daylight",
+                            "Testing network cable physical integrity"
+                        ],
+                        correct: 1,
+                        comment: "White-box tests provide full system architecture and source code access, enabling exhaustive code review and comprehensive vulnerability coverage."
+                    },
+                    {
+                        q: "What is gray-box penetration testing?",
+                        options: [
+                            "Testing software written in C++ and Java simultaneously",
+                            "A testing approach where the tester possesses partial knowledge of the target system (such as user credentials or network diagrams), simulating insider threats",
+                            "Testing old legacy computer hardware",
+                            "Scanning network ports intermittently"
+                        ],
+                        correct: 1,
+                        comment: "Gray-box testing balances efficiency and realism, providing testers with limited credentials or network insights like a privileged insider."
+                    },
+                    {
+                        q: "What is the Common Vulnerabilities and Exposures (CVE) system?",
+                        options: [
+                            "A corporate video encryption format",
+                            "A standardized dictionary and catalog of publicly known cybersecurity vulnerabilities and exposures",
+                            "A protocol for configuring router firewall rules",
+                            "An operating system patch management tool"
+                        ],
+                        correct: 1,
+                        comment: "CVE provides standardized identifiers (e.g., CVE-2026-1234) for publicly disclosed vulnerabilities, enabling consistent tracking across tools."
+                    },
+                    {
+                        q: "What is the Common Vulnerability Scoring System (CVSS)?",
+                        options: [
+                            "A scoring system for employee cybersecurity exams",
+                            "A free and open industry standard for assessing the severity and potential impact of computer system security vulnerabilities",
+                            "A benchmark for measuring CPU processing speed",
+                            "A protocol for calculating network latency"
+                        ],
+                        correct: 1,
+                        comment: "CVSS assigns numerical severity scores (0 to 10) to vulnerabilities based on exploitability metrics and impact characteristics, guiding remediation."
+                    },
+                    {
+                        q: "What is exploit code in security testing?",
+                        options: [
+                            "Code used to encrypt database files",
+                            "Software or script designed to take advantage of a software bug or vulnerability to grant unauthorized access or cause disruption",
+                            "Source code for antivirus scanning tools",
+                            "An algorithm for compressing network packets"
+                        ],
+                        correct: 1,
+                        comment: "Exploit code leverages software flaws to demonstrate vulnerability impact or gain unauthorized control during authorized penetration tests."
+                    },
+                    {
+                        q: "What is vulnerability remediation?",
+                        options: [
+                            "Ignoring reported security bugs until systems crash",
+                            "The process of fixing, patching, or mitigating identified vulnerabilities to reduce risk exposure",
+                            "Scanning networks for open ports weekly",
+                            "Purchasing cyber insurance policies"
+                        ],
+                        correct: 1,
+                        comment: "Remediation closes security gaps through software patches, configuration hardening, or compensating controls."
+                    },
+                    {
+                        q: "What is a false positive in vulnerability scanning?",
+                        options: [
+                            "A vulnerability that is successfully exploited by hackers",
+                            "An alert indicating that a vulnerability exists when the system is actually secure and not vulnerable",
+                            "A virus detection confirmed by antivirus software",
+                            "A valid password rejected by the login system"
+                        ],
+                        correct: 1,
+                        comment: "False positives occur when scanners misinterpret normal configurations as security flaws, requiring manual verification by analysts."
+                    },
+                    {
+                        q: "What is a false negative in vulnerability scanning?",
+                        options: [
+                            "An alert for a vulnerability that does not exist",
+                            "A failure of a scanner to detect an actual existing security vulnerability on a target system",
+                            "An incorrect password accepted by authentication servers",
+                            "A successful malware removal process"
+                        ],
+                        correct: 1,
+                        comment: "False negatives are dangerous security blind spots where scanners miss real vulnerabilities, giving a false sense of security."
+                    },
+                    {
+                        q: "What is credentialed vulnerability scanning?",
+                        options: [
+                            "Scanning systems using fake user credentials",
+                            "A scan performed with valid user credentials (such as administrative accounts), allowing deep inspection of internal settings, patches, and files",
+                            "Scanning network cables for physical damage",
+                            "Verifying employee university degrees"
+                        ],
+                        correct: 1,
+                        comment: "Credentialed scans provide thorough internal visibility, uncovering missing patches and misconfigurations that external scans cannot see."
+                    },
+                    {
+                        q: "What is uncredentialed (black-box) vulnerability scanning?",
+                        options: [
+                            "Scanning systems without valid user credentials, simulating an external attacker probing exposed network services",
+                            "Scanning hardware inside locked server racks",
+                            "Testing software source code line-by-line",
+                            "Checking wireless router power supplies"
+                        ],
+                        correct: 0,
+                        comment: "Uncredentialed scans evaluate external attack surfaces without login credentials, identifying ports, services, and accessible vulnerabilities."
+                    },
+                    {
+                        q: "What is reconnaissance in the penetration testing lifecycle?",
+                        options: [
+                            "Writing final assessment reports for management",
+                            "The initial phase of gathering intelligence, information, and data about a target system, network, or organization",
+                            "Installing antivirus software on workstations",
+                            "Patching operating system vulnerabilities"
+                        ],
+                        correct: 1,
+                        comment: "Reconnaissance (footprinting) collects open-source intelligence (OSINT), IP ranges, and domain details before launching active scans."
+                    },
+                    {
+                        q: "What is post-exploitation in penetration testing?",
+                        options: [
+                            "Cleaning up office trash after a pentest meeting",
+                            "The phase after initial access is gained, focusing on maintaining access, privilege escalation, pivoting, and gathering sensitive data",
+                            "Writing the introduction chapter of a security report",
+                            "Installing firewall hardware on network perimeters"
+                        ],
+                        correct: 1,
+                        comment: "Post-exploitation determines the true business impact of a breach by evaluating what sensitive data or lateral systems an attacker can reach."
+                    },
+                    {
+                        q: "What is a penetration testing rules of engagement document?",
+                        options: [
+                            "A manual on how to play video games",
+                            "A formal legal agreement outlining the scope, boundaries, timelines, permissions, and safety constraints of a penetration test",
+                            "A software programming style guide",
+                            "An employee dress code policy"
+                        ],
+                        correct: 1,
+                        comment: "Rules of engagement protect both organizations and testers by defining exact boundaries, legal permissions, and emergency contacts."
+                    },
+                    {
+                        q: "What is threat modeling?",
+                        options: [
+                            "Modeling fashion clothing for security conferences",
+                            "A structured engineering approach used to identify, quantify, and address security risks and potential attack vectors during system design",
+                            "Measuring network router bandwidth limits",
+                            "Scanning hard drives for virus signatures"
+                        ],
+                        correct: 1,
+                        comment: "Threat modeling analyzes system architecture proactively during design phases to anticipate how adversaries might attack components."
+                    },
+                    {
+                        q: "What is a penetration testing executive summary?",
+                        options: [
+                            "A list of all 10,000 scanned IP addresses",
+                            "A concise, non-technical overview of pentest findings, business risk impact, and strategic recommendations tailored for leadership",
+                            "The legal contract signed before testing begins",
+                            "A technical guide on how to patch Linux kernels"
+                        ],
+                        correct: 1,
+                        comment: "Executive summaries communicate complex technical security findings into actionable business risk insights for board members and executives."
+                    },
+                    {
+                        q: "What is network discovery scanning?",
+                        options: [
+                            "Searching for lost office laptops",
+                            "Scanning a network range using ICMP, ARP, or TCP probes to identify active hosts, IP addresses, and live systems",
+                            "Measuring fiber-optic cable lengths",
+                            "Checking software license compliance"
+                        ],
+                        correct: 1,
+                        comment: "Discovery scanning maps active nodes across network ranges before conducting detailed port and vulnerability scans."
+                    },
+                    {
+                        q: "What is a security baseline audit?",
+                        options: [
+                            "Auditing employee bank account balances",
+                            "Comparing current system configurations and security settings against established organizational security baselines or industry standards",
+                            "Testing power generator stability in basements",
+                            "Measuring internet connection speed baselines"
+                        ],
+                        correct: 1,
+                        comment: "Baseline audits ensure that servers and workstations maintain required hardening standards and do not drift into insecure configurations."
+                    },
+                    {
+                        q: "What is OWASP Top 10?",
+                        options: [
+                            "The top 10 most popular programming languages",
+                            "A standard awareness document representing the most critical security risks to web applications published by the Open Worldwide Application Security Project",
+                            "The top 10 routers recommended for enterprise networks",
+                            "A list of the 10 largest cybersecurity companies"
+                        ],
+                        correct: 1,
+                        comment: "The OWASP Top 10 guides developers and security professionals on mitigating critical web application vulnerabilities like injection and XSS."
+                    },
+                    {
+                        q: "What is vulnerability validation?",
+                        options: [
+                            "Checking user passwords for complexity",
+                            "The process of confirming whether a reported vulnerability is genuine and exploitable, often through manual verification or safe proof-of-concept testing",
+                            "Verifying software license keys",
+                            "Scanning email attachments for malware"
+                        ],
+                        correct: 1,
+                        comment: "Validation eliminates false positives by confirming whether vulnerabilities pose real, actionable risk in the target environment."
+                    },
+                    {
+                        q: "What is the principle of least astonishment in security design?",
+                        options: [
+                            "Surprising users with unexpected pop-up windows",
+                            "Designing systems and user interfaces so that security behaviors match user expectations without surprising or confusing them into insecure actions",
+                            "Using unpredictable cryptographic keys",
+                            "Hiding security settings deep inside menus"
+                        ],
+                        correct: 1,
+                        comment: "Least astonishment ensures security mechanisms are intuitive, reducing human error caused by confusing or counterintuitive interfaces."
+                    },
+                    {
+                        q: "What is a penetration test scope?",
+                        options: [
+                            "A telescope used to look at server racks",
+                            "The clearly defined boundaries, targets, IP ranges, applications, and locations included in or excluded from an authorized security test",
+                            "The budget allocated for security software licenses",
+                            "The duration of employee training courses"
+                        ],
+                        correct: 1,
+                        comment: "Scope definition prevents unauthorized testing outside agreed targets, ensuring legal protection and focused assessment efforts."
+                    },
+                    {
+                        q: "What is continuous vulnerability monitoring?",
+                        options: [
+                            "Running vulnerability scanners 24/7 without stopping",
+                            "The ongoing, automated process of tracking and assessing security vulnerabilities across an IT environment as new threats and assets emerge",
+                            "Manually checking server logs once a year",
+                            "Replacing hardware components every month"
+                        ],
+                        correct: 1,
+                        comment: "Continuous monitoring provides real-time visibility into emerging vulnerabilities and configuration drift, superior to periodic annual assessments."
+                    }
+                ]
+            }
+        ];
+
+        // State variables
+        let currentChapter = 0;
+        let currentQuestionIndex = 0;
+        let userAnswers = {}; // Format: { chapterIndex: { questionIndex: selectedOptionIndex } }
+        const CHAPTER_TIME_LIMIT = 15 * 60; // 15 minutes per chapter (25 questions)
+        let timerSeconds = CHAPTER_TIME_LIMIT;
+        let timerInterval = null;
+        let chapterSubmitted = {}; // Format: { chapterIndex: true/false } — a chapter locks once submitted
+        let totalElapsedSeconds = 0; // running total across the whole exam, used for the final results screen
+        let examFinished = false; // true once every chapter has been submitted
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', () => {
+            initDataStructure();
+            enterChapter(0, 0);
+        });
+
+        // Ensure userAnswers / chapterSubmitted structures are initialized for all 8 chapters
+        function initDataStructure() {
+            courseData.forEach((chap, cIdx) => {
+                if (!userAnswers[cIdx]) {
+                    userAnswers[cIdx] = {};
+                }
+                if (chapterSubmitted[cIdx] === undefined) {
+                    chapterSubmitted[cIdx] = false;
+                }
+            });
+        }
+
+        // Update the on-screen timer text from the current timerSeconds value
+        function updateTimerDisplay() {
+            let m = Math.floor(timerSeconds / 60);
+            let s = timerSeconds % 60;
+            document.getElementById('timer').textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        // Start the countdown for whichever chapter is currently open
+        // devSpeedMultiplier (see DEV TESTING TOOL block near the end of this file)
+        // lets the timer tick faster during testing — it has no effect (multiplier of 1)
+        // once that block is removed.
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                const step = typeof devSpeedMultiplier !== 'undefined' ? devSpeedMultiplier : 1;
+                totalElapsedSeconds += step;
+
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    if (!chapterSubmitted[currentChapter] && !examFinished) {
+                        finishChapterAndAdvance(true);
+                    }
+                    return;
+                }
+                timerSeconds -= step;
+                if (timerSeconds < 0) timerSeconds = 0;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        // Enter a chapter: load its first (or given) question and reset/start its own
+        // 15-minute timer — unless that chapter is already submitted or the exam is over.
+        function enterChapter(chapIdx, qIdx) {
+            currentChapter = chapIdx;
+            currentQuestionIndex = qIdx;
+            renderChapterNav();
+            loadQuestion(chapIdx, qIdx);
+
+            clearInterval(timerInterval);
+            if (!chapterSubmitted[chapIdx] && !examFinished) {
+                timerSeconds = CHAPTER_TIME_LIMIT;
+                updateTimerDisplay();
+                startTimer();
+            } else {
+                document.getElementById('timer').textContent = examFinished ? 'Finished' : 'Submitted';
+            }
+        }
+
+        // Render Sidebar Navigation Chapters
+        function renderChapterNav() {
+            const nav = document.getElementById('chapterNav');
+            nav.innerHTML = '';
+            courseData.forEach((chap, idx) => {
+                let answeredCount = Object.keys(userAnswers[idx] || {}).length;
+                let isDone = chapterSubmitted[idx];
+                let badgeText = isDone ? 'Submitted \u2713' : `${answeredCount}/25`;
+                let btn = document.createElement('button');
+                btn.className = `w-full text-left px-3 py-2.5 rounded-lg text-xs font-medium transition flex items-center justify-between group ${
+                    currentChapter === idx 
+                        ? 'bg-indigo-600 text-white shadow' 
+                        : 'text-slate-300 hover:bg-slate-700/60 hover:text-white'
+                }`;
+                btn.innerHTML = `
+                    <span class="truncate pr-2">${chap.title}</span>
+                    <span class="text-[10px] px-1.5 py-0.5 rounded ${isDone ? 'bg-emerald-700 text-emerald-100' : (currentChapter === idx ? 'bg-indigo-700 text-indigo-100' : 'bg-slate-900 text-slate-400 group-hover:text-slate-200')}">${badgeText}</span>
+                `;
+                btn.onclick = () => switchChapter(idx);
+                nav.appendChild(btn);
+            });
+        }
+
+        // Switch Active Chapter (triggered from the sidebar)
+        function switchChapter(chapIdx) {
+            enterChapter(chapIdx, 0);
+        }
+
+        // Load Question into Workspace
+        function loadQuestion(chapIdx, qIdx) {
+            currentChapter = chapIdx;
+            currentQuestionIndex = qIdx;
+            
+            const chap = courseData[chapIdx];
+            const q = chap.questions[qIdx];
+
+            // Update Header Meta
+            document.getElementById('currentChapterBadge').textContent = `Chapter ${chapIdx + 1}`;
+            document.getElementById('currentChapterTitle').textContent = chap.title.replace(/^Chapter \d+:\s*/, '');
+            document.getElementById('currentQuestionNum').textContent = qIdx + 1;
+            document.getElementById('totalChapterQuestions').textContent = chap.questions.length;
+
+            // Render Question Card
+            const container = document.getElementById('questionContainer');
+            
+            let optionsHTML = '';
+            q.options.forEach((opt, oIdx) => {
+                let isSelected = userAnswers[chapIdx] && userAnswers[chapIdx][qIdx] === oIdx;
+                let optionStyle = isSelected 
+                    ? 'bg-indigo-600/20 border-indigo-500 text-white font-medium shadow' 
+                    : 'bg-slate-900/60 border-slate-700 text-slate-200 hover:bg-slate-700/40 hover:border-slate-600';
+
+                // If this chapter has been submitted, show correct/incorrect highlights
+                if (chapterSubmitted[chapIdx]) {
+                    if (oIdx === q.correct) {
+                        optionStyle = 'bg-emerald-950/60 border-emerald-500 text-emerald-200 font-medium';
+                    } else if (isSelected && isSelected !== q.correct) {
+                        optionStyle = 'bg-rose-950/60 border-rose-500 text-rose-200';
+                    } else {
+                        optionStyle = 'bg-slate-900/30 border-slate-800 text-slate-500 opacity-60';
+                    }
+                }
+
+                optionsHTML += `
+                    <label class="flex items-start gap-3.5 p-4 rounded-xl border transition cursor-pointer ${optionStyle}" onclick="selectOption(${chapIdx}, ${qIdx}, ${oIdx})">
+                        <input type="radio" name="q_${chapIdx}_${qIdx}" value="${oIdx}" ${isSelected ? 'checked' : ''} ${chapterSubmitted[chapIdx] ? 'disabled' : ''} class="mt-1 text-indigo-600 focus:ring-indigo-500 bg-slate-900 border-slate-700">
+                        <span class="text-sm leading-relaxed flex-grow">${opt}</span>
+                    </label>
+                `;
+            });
+
+            // Comment / Explanation box once this chapter has been submitted
+            let commentHTML = '';
+            if (chapterSubmitted[chapIdx]) {
+                let userChosen = userAnswers[chapIdx] ? userAnswers[chapIdx][qIdx] : null;
+                let isCorrect = userChosen === q.correct;
+                commentHTML = `
+                    <div class="mt-6 p-4 rounded-xl border ${isCorrect ? 'bg-emerald-950/30 border-emerald-500/50 text-emerald-200' : 'bg-rose-950/30 border-rose-500/50 text-rose-200'} space-y-2">
+                        <div class="flex items-center gap-2 font-bold text-xs uppercase tracking-wider">
+                            <span>${isCorrect ? '✓ Correct Answer' : '✗ Incorrect / Missed'}</span>
+                        </div>
+                        <p class="text-xs leading-relaxed text-slate-300"><strong class="text-white">Expert Comment & Explanation:</strong> ${q.comment}</p>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = `
+                <div class="space-y-6">
+                    <h3 class="text-lg sm:text-xl font-semibold text-white leading-snug">${q.q}</h3>
+                    <div class="space-y-3">
+                        ${optionsHTML}
+                    </div>
+                    ${commentHTML}
+                </div>
+            `;
+
+            // Update Pagination Buttons
+            document.getElementById('prevBtn').disabled = (chapIdx === 0 && qIdx === 0);
+            document.getElementById('nextBtn').disabled = (chapIdx === courseData.length - 1 && qIdx === chap.questions.length - 1);
+
+            // Update the Submit Chapter button to reflect this chapter's state
+            const submitChBtn = document.getElementById('submitChapterBtn');
+            if (chapterSubmitted[chapIdx]) {
+                submitChBtn.disabled = true;
+                submitChBtn.textContent = 'Chapter Submitted \u2713';
+            } else {
+                submitChBtn.disabled = false;
+                submitChBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Submit Chapter`;
+            }
+
+            renderQuickDots();
+            renderChapterNav();
+        }
+
+        // Render Quick Navigation Dots for Current Chapter
+        function renderQuickDots() {
+            const dotsContainer = document.getElementById('chapterQuickDots');
+            dotsContainer.innerHTML = '';
+            const chap = courseData[currentChapter];
+            
+            // Show up to 10 dots or pagination indicators to keep UI clean
+            chap.questions.forEach((_, idx) => {
+                let isAnswered = userAnswers[currentChapter] && userAnswers[currentChapter][idx] !== undefined;
+                let isCurrent = idx === currentQuestionIndex;
+                
+                let dot = document.createElement('button');
+                dot.className = `w-3 h-3 rounded-full transition ${
+                    isCurrent 
+                        ? 'bg-indigo-500 ring-2 ring-indigo-400/50 scale-110' 
+                        : isAnswered 
+                            ? 'bg-emerald-500/80 hover:bg-emerald-400' 
+                            : 'bg-slate-700 hover:bg-slate-600'
+                }`;
+                dot.title = `Question ${idx + 1} ${isAnswered ? '(Answered)' : ''}`;
+                dot.onclick = () => loadQuestion(currentChapter, idx);
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        // Handle Option Selection
+        function selectOption(chapIdx, qIdx, optIdx) {
+            if (chapterSubmitted[chapIdx]) return;
+            userAnswers[chapIdx][qIdx] = optIdx;
+            renderQuickDots();
+            renderChapterNav();
+        }
+
+        // Navigation Controls
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                loadQuestion(currentChapter, currentQuestionIndex - 1);
+            } else if (currentChapter > 0) {
+                let prevChap = currentChapter - 1;
+                enterChapter(prevChap, courseData[prevChap].questions.length - 1);
+            }
+        }
+
+        function nextQuestion() {
+            const chap = courseData[currentChapter];
+            if (currentQuestionIndex < chap.questions.length - 1) {
+                loadQuestion(currentChapter, currentQuestionIndex + 1);
+            } else if (currentChapter < courseData.length - 1) {
+                enterChapter(currentChapter + 1, 0);
+            }
+        }
+
+        // Manually submit the current chapter (25 questions) once the student is ready.
+        function submitChapter() {
+            if (chapterSubmitted[currentChapter] || examFinished) return;
+
+            const chap = courseData[currentChapter];
+            let answeredCount = Object.keys(userAnswers[currentChapter] || {}).length;
+
+            if (answeredCount < chap.questions.length) {
+                let ok = confirm(`You've answered ${answeredCount} of ${chap.questions.length} questions in "${chap.title}". Unanswered questions in this chapter will be marked incorrect. Submit this chapter now?`);
+                if (!ok) return;
+            }
+
+            finishChapterAndAdvance(false);
+        }
+
+        // Shared logic for locking in a chapter, whether triggered manually (Submit Chapter)
+        // or automatically when that chapter's 15-minute timer runs out.
+        function finishChapterAndAdvance(isTimeout) {
+            if (chapterSubmitted[currentChapter] || examFinished) return;
+
+            chapterSubmitted[currentChapter] = true;
+            clearInterval(timerInterval);
+
+            const chap = courseData[currentChapter];
+            let chapCorrect = 0;
+            chap.questions.forEach((q, qIdx) => {
+                if (userAnswers[currentChapter] && userAnswers[currentChapter][qIdx] === q.correct) {
+                    chapCorrect++;
+                }
+            });
+
+            const allChaptersSubmitted = courseData.every((_, idx) => chapterSubmitted[idx]);
+
+            let message = isTimeout
+                ? `Time's up for ${chap.title}! You scored ${chapCorrect} / ${chap.questions.length} on this chapter.`
+                : `${chap.title} submitted. Score: ${chapCorrect} / ${chap.questions.length}.`;
+            message += allChaptersSubmitted
+                ? ' That was the final chapter \u2014 your exam is now complete.'
+                : ' Moving on to the next chapter with a fresh 15 minutes.';
+            alert(message);
+
+            if (allChaptersSubmitted) {
+                finishExam();
+            } else {
+                // Advance to the next chapter that hasn't been submitted yet
+                let nextIdx = currentChapter;
+                for (let i = 1; i <= courseData.length; i++) {
+                    let candidate = (currentChapter + i) % courseData.length;
+                    if (!chapterSubmitted[candidate]) { nextIdx = candidate; break; }
+                }
+                enterChapter(nextIdx, 0);
+            }
+        }
+
+        // Global "Submit Exam" button — ends the exam immediately, locking in every
+        // chapter (including any not yet individually submitted) and showing final results.
+        function submitQuiz() {
+            if (examFinished) return;
+
+            let totalAnswered = 0;
+            let totalQuestions = 200; // 8 chapters * 25 questions
+
+            Object.keys(userAnswers).forEach(cIdx => {
+                totalAnswered += Object.keys(userAnswers[cIdx]).length;
+            });
+
+            if (totalAnswered < totalQuestions) {
+                let confirmSubmit = confirm(`You have answered ${totalAnswered} out of ${totalQuestions} questions across all chapters. Are you sure you want to end the exam now? Unanswered questions will be marked incorrect.`);
+                if (!confirmSubmit) return;
+            }
+
+            // Lock in every chapter, whether or not it was individually submitted already
+            courseData.forEach((_, idx) => { chapterSubmitted[idx] = true; });
+
+            finishExam();
+        }
+
+        // Computes and displays the final results modal. Called either once every
+        // chapter has been submitted, or when the student force-ends the exam early.
+        function finishExam() {
+            examFinished = true;
+            clearInterval(timerInterval);
+            document.getElementById('timer').textContent = 'Finished';
+
+            // Calculate Scores
+            let totalCorrect = 0;
+            let totalQuestions = 200;
+            let breakdownHTML = '';
+
+            courseData.forEach((chap, cIdx) => {
+                let chapCorrect = 0;
+                let chapTotal = chap.questions.length;
+                
+                chap.questions.forEach((q, qIdx) => {
+                    if (userAnswers[cIdx] && userAnswers[cIdx][qIdx] === q.correct) {
+                        chapCorrect++;
+                    }
+                });
+
+                totalCorrect += chapCorrect;
+                let chapPct = Math.round((chapCorrect / chapTotal) * 100);
+
+                breakdownHTML += `
+                    <div class="bg-slate-900 border border-slate-700/60 p-3.5 rounded-xl flex items-center justify-between">
+                        <div>
+                            <h5 class="text-xs font-bold text-slate-200">${chap.title}</h5>
+                            <span class="text-[11px] text-slate-400">Score: ${chapCorrect} / ${chapTotal} correct</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-sm font-extrabold ${chapPct >= 70 ? 'text-emerald-400' : chapPct >= 50 ? 'text-amber-400' : 'text-rose-400'}">${chapPct}%</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            let finalPct = Math.round((totalCorrect / totalQuestions) * 100);
+            let elM = Math.floor(totalElapsedSeconds / 60);
+            let elS = totalElapsedSeconds % 60;
+
+            // Populate Results Modal
+            document.getElementById('resScore').textContent = `${finalPct}%`;
+            document.getElementById('resCorrect').textContent = `${totalCorrect} / ${totalQuestions}`;
+            document.getElementById('resTime').textContent = `${elM.toString().padStart(2, '0')}:${elS.toString().padStart(2, '0')}`;
+            document.getElementById('chapterBreakdown').innerHTML = breakdownHTML;
+            document.getElementById('resultsModal').classList.remove('hidden');
+
+            // Reload current question to display comment feedback highlights, and
+            // refresh the sidebar so every chapter shows as Submitted.
+            renderChapterNav();
+            loadQuestion(currentChapter, currentQuestionIndex);
+        }
+
+        function closeResults() {
+            document.getElementById('resultsModal').classList.add('hidden');
+        }
+
+        function restartQuiz() {
+            if (confirm("Are you sure you want to restart the assessment? All your progress will be reset.")) {
+                userAnswers = {};
+                chapterSubmitted = {};
+                examFinished = false;
+                totalElapsedSeconds = 0;
+                document.getElementById('resultsModal').classList.add('hidden');
+                initDataStructure();
+                enterChapter(0, 0);
+            }
+        }
+    </script>    <!-- ============================================================ -->
+    <!-- DEV TESTING TOOL — DELETE THIS ENTIRE BLOCK BEFORE REAL USE   -->
+    <!-- Speeds up the countdown 20x so you can test chapter timeouts -->
+    <!-- and auto-advancing without waiting 15 real minutes per chapter. -->
+    <!-- ============================================================ -->
+    <button id="devSpeedToggle" onclick="toggleDevSpeed()"
+        style="position:fixed; bottom:16px; right:16px; z-index:100; font-family:monospace; font-size:12px; padding:8px 14px; border-radius:8px; border:2px solid #f59e0b; background:#1c1917; color:#f59e0b; cursor:pointer;">
+        ⚡ Dev: Speed x1 (click to test faster)
+    </button>
+    <script>
+        // DEV TESTING TOOL — delete this whole <script> block too when removing the toggle above.
+        let devSpeedMultiplier = 1;
+        function toggleDevSpeed() {
+            devSpeedMultiplier = (devSpeedMultiplier === 1) ? 20 : 1;
+            const btn = document.getElementById('devSpeedToggle');
+            if (devSpeedMultiplier > 1) {
+                btn.textContent = `⚡ Dev: Speed x${devSpeedMultiplier} (15 min chapter ≈ 45s)`;
+                btn.style.background = '#f59e0b';
+                btn.style.color = '#1c1917';
+            } else {
+                btn.textContent = '⚡ Dev: Speed x1 (click to test faster)';
+                btn.style.background = '#1c1917';
+                btn.style.color = '#f59e0b';
+            }
+        }
+        console.warn('DEV TESTING TOOL is active (speed toggle button, bottom-right). Remove this block and the button above before using this for a real assessment.');
+    </script>
+    <!-- ======================= END DEV TESTING TOOL ======================= -->
+
+</body>
+</html>

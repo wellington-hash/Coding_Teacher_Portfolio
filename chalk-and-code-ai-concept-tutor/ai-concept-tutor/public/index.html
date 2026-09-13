@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chalk & Code — AI Concept Tutor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="board">
+    <header class="board-header">
+      <span class="chalk-title">Ask the Tutor</span>
+      <span class="chalk-subtitle">stuck on a concept? get a simple explanation, an analogy, and a question to test yourself</span>
+    </header>
+
+    <div class="layout">
+      <main id="app" class="card"></main>
+
+      <aside class="side-card">
+        <h3>Recently asked</h3>
+        <ul id="history-list" class="history-list">
+          <li class="muted">Nothing yet — ask about something.</li>
+        </ul>
+      </aside>
+    </div>
+
+    <footer class="board-footer">
+      powered by an AI API &middot; every explanation is generated, not scripted
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
